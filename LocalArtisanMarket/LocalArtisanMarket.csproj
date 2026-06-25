@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0A03FA62-D48E-4DEE-9ED7-7D995DF16F26}</ProjectGuid>
+    <ProjectGuid>{FEA2D242-A4D6-CA7A-16EE-F61C4C8D968B}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>LocalArtisanMarket</RootNamespace>
     <AssemblyName>LocalArtisanMarket</AssemblyName>
@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Main.cs">
+
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Main.Designer.cs">
