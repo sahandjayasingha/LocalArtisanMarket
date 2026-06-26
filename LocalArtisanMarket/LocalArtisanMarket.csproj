@@ -80,7 +80,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="db_schema.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="db_schema.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
