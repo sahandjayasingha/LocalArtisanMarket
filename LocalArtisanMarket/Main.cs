@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LocalArtisanMarket
@@ -78,19 +71,57 @@ namespace LocalArtisanMarket
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            if (btnlogin.Text == "Logout")
+            var button = sender as System.Windows.Forms.Button;
+            if (button != null && button.Text == "Logout")
             {
                 this.panelContent.Controls.Clear();
                 ConfigureNavigation(null);
-                MessageBox.Show("Logged out successfully!", "Session Ended", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Logged out successfully!", "Session Ended", MessageBoxButtons.OK);
                 return;
             }
-
-            // LoadChildForm(new LoginForm());
         }
 
-        private void panelContent_Paint(object sender, PaintEventArgs e)
+        private void btnlogin_Click_1(object sender, EventArgs e)
         {
+            MessageBox.Show("Login button clicked!");
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

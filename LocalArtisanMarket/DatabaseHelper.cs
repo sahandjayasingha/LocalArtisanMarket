@@ -3,19 +3,12 @@ using System.Data.SqlClient;
 
 namespace LocalArtisanMarket
 {
-    public sealed class DatabaseHelper
+    public static class DatabaseHelper
     {
-        private static readonly DatabaseHelper instance = new DatabaseHelper();
-        private readonly string connectionString = @"Data Source=.;Initial Catalog=LocalArtisanMarketDB;Integrated Security=True;TrustServerCertificate=True;";
 
-        private DatabaseHelper() { }
+        private static string connectionString = @"Server=DESKTOP-0IHPJNN;Database=LocalArtisanMarketDB;Trusted_Connection=True;";
 
-        public static DatabaseHelper Instance
-        {
-            get { return instance; }
-        }
-
-        public SqlConnection GetConnection()
+        public static SqlConnection GetConnection()
         {
             return new SqlConnection(connectionString);
         }
