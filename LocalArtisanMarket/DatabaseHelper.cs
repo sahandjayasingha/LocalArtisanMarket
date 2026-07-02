@@ -15,6 +15,8 @@ namespace LocalArtisanMarket
             get { return instance; }
         }
 
+        public static string ConnectionString { get; internal set; }
+
         public SqlConnection GetConnection()
         {
             return new SqlConnection(connectionString);
