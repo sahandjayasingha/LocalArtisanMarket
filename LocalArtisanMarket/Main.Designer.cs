@@ -48,6 +48,7 @@
             this.panelSideMenu.Controls.Add(this.btnhome);
             this.panelSideMenu.Dock = System.Windows.Forms.DockStyle.Left;
             this.panelSideMenu.Location = new System.Drawing.Point(0, 0);
+            this.panelSideMenu.Margin = new System.Windows.Forms.Padding(4);
             this.panelSideMenu.Name = "panelSideMenu";
             this.panelSideMenu.Size = new System.Drawing.Size(200, 450);
             this.panelSideMenu.TabIndex = 0;
@@ -55,7 +56,8 @@
             // 
             // btnlogin
             // 
-            this.btnlogin.Location = new System.Drawing.Point(3, 246);
+            this.btnlogin.Location = new System.Drawing.Point(4, 303);
+            this.btnlogin.Margin = new System.Windows.Forms.Padding(4);
             this.btnlogin.Name = "btnlogin";
             this.btnlogin.Size = new System.Drawing.Size(194, 45);
             this.btnlogin.TabIndex = 3;
@@ -65,7 +67,8 @@
             // 
             // btnInventory
             // 
-            this.btnInventory.Location = new System.Drawing.Point(3, 181);
+            this.btnInventory.Location = new System.Drawing.Point(4, 223);
+            this.btnInventory.Margin = new System.Windows.Forms.Padding(4);
             this.btnInventory.Name = "btnInventory";
             this.btnInventory.Size = new System.Drawing.Size(194, 45);
             this.btnInventory.TabIndex = 2;
@@ -74,18 +77,20 @@
             // 
             // btnproducts
             // 
-            this.btnproducts.Location = new System.Drawing.Point(3, 117);
+            this.btnproducts.Location = new System.Drawing.Point(4, 144);
+            this.btnproducts.Margin = new System.Windows.Forms.Padding(4);
             this.btnproducts.Name = "btnproducts";
             this.btnproducts.Size = new System.Drawing.Size(194, 45);
             this.btnproducts.TabIndex = 1;
             this.btnproducts.Text = "Products";
             this.btnproducts.UseVisualStyleBackColor = true;
-            // 
-            // btnhome
-            // 
+            
+            
+  
             this.btnhome.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnhome.ForeColor = System.Drawing.Color.White;
-            this.btnhome.Location = new System.Drawing.Point(3, 30);
+            this.btnhome.Location = new System.Drawing.Point(4, 62);
+            this.btnhome.Margin = new System.Windows.Forms.Padding(4);
             this.btnhome.Name = "btnhome";
             this.btnhome.Size = new System.Drawing.Size(194, 45);
             this.btnhome.TabIndex = 0;
@@ -99,6 +104,7 @@
             this.panelContent.Controls.Add(this.mainWorkspacePanel);
             this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelContent.Location = new System.Drawing.Point(200, 0);
+            this.panelContent.Margin = new System.Windows.Forms.Padding(4);
             this.panelContent.Name = "panelContent";
             this.panelContent.Size = new System.Drawing.Size(1293, 450);
             this.panelContent.TabIndex = 1;
@@ -120,6 +126,7 @@
             this.ClientSize = new System.Drawing.Size(1493, 450);
             this.Controls.Add(this.panelContent);
             this.Controls.Add(this.panelSideMenu);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Main";
             this.Text = "Main";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
