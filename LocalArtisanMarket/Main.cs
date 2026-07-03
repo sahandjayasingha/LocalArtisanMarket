@@ -15,10 +15,6 @@ namespace LocalArtisanMarket
             ConfigureNavigation(null);
         }
 
-        private void panelSideMenu_Paint(object sender, PaintEventArgs e)
-        {
-        }
-
         public void LoadChildForm(Form childForm)
         {
             if (this.panelContent == null || childForm == null) return;
@@ -69,7 +65,7 @@ namespace LocalArtisanMarket
             }
         }
 
-        private void btnLogin_Click(object sender, EventArgs e)
+        private void btnlogin_Click_1(object sender, EventArgs e)
         {
             var button = sender as System.Windows.Forms.Button;
             if (button != null && button.Text == "Logout")
@@ -81,10 +77,19 @@ namespace LocalArtisanMarket
             }
         }
 
+        
+        private void btnhome_Click(object sender, EventArgs e)
         private void btnlogin_Click_1(object sender, EventArgs e)
         {
+            
+            this.panelContent.Controls.Clear();
+
+           
             MessageBox.Show("Login button clicked!");
         }
+
+        private void panelSideMenu_Paint(object sender, PaintEventArgs e) { }
+        private void panelContent_Paint(object sender, PaintEventArgs e) { }
     }
 }
 
