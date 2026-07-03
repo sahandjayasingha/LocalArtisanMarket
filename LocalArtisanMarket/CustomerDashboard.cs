@@ -32,7 +32,7 @@ namespace LocalArtisanMarket
             try
             {
                 // THE FIX: We now use your teammate's Singleton instance to get the connection!
-                using (System.Data.SqlClient.SqlConnection conn = DatabaseHelper.Instance.GetConnection())
+                using (System.Data.SqlClient.SqlConnection conn = DatabaseHelper.GetConnection())
                 {
                     using (System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(query, conn))
                     {

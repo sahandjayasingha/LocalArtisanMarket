@@ -23,16 +23,15 @@ GO
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Products]') AND type in (N'U'))
 IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Users')
 BEGIN
-    CREATE TABLE [dbo].[Products] (
-        [ProductID] INT IDENTITY(1,1) PRIMARY KEY,
-        [ProductName] NVARCHAR(150) NOT NULL,
-        [Description] NVARCHAR(MAX),
-        [Price] DECIMAL(18,2) NOT NULL,
-        [StockQuantity] INT NOT NULL DEFAULT 0,
-        [ArtisanID] INT,
-        [CreatedAt] DATETIME DEFAULT GETDATE(),
-        FOREIGN KEY (ArtisanID) REFERENCES Users(UserID)
-    );
+   CREATE TABLE Products (
+    ProductID INT IDENTITY(1,1) PRIMARY KEY,
+    ProductName VARCHAR(100) NOT NULL,
+    Price DECIMAL(10,2) NOT NULL,
+    Quantity INT NOT NULL,
+    ArtisanID INT NOT NULL, 
+    CONSTRAINT FK_Products_Users FOREIGN KEY (ArtisanID) REFERENCES Users(UserID)
+);
+ 
 END
 GO
 IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Products')

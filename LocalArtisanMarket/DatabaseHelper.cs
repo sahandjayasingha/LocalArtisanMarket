@@ -7,12 +7,16 @@ namespace LocalArtisanMarket
 {
     public static class DatabaseHelper
     {
+        
+        private static string connectionString = @"Server=DESKTOP-0IHPJNN;Database=LocalArtisanMarketDB;Trusted_Connection=True;";
 
+        
         public static SqlConnection GetConnection()
         {
             return new SqlConnection(connectionString);
         }
 
+        
         public static DataTable ExecuteQuery(string query, SqlParameter[] parameters = null)
         {
             using (SqlConnection conn = GetConnection())
@@ -41,8 +45,8 @@ namespace LocalArtisanMarket
                 }
             }
         }
-        private static string connectionString = @"Server=DESKTOP-0IHPJNN;Database=LocalArtisanMarketDB;Trusted_Connection=True;";
 
+        
         public static int ExecuteNonQuery(string query, SqlParameter[] parameters = null)
         {
             using (SqlConnection conn = GetConnection())
@@ -66,9 +70,19 @@ namespace LocalArtisanMarket
                     }
                 }
             }
-        public static SqlConnection GetConnection()
+        }
+
+        
+        public static void LogTelemetryData(int productId, decimal moistureLevel, string stage, string supplier)
         {
-            return new SqlConnection(connectionString);
+            string query = "INSERT INTO MaterialTracking (ProductID, MoistureLevel, ProductionStage, SupplierInfo) VALUES (@ProductID, @Moisture, @Stage, @Supplier)";
+            SqlParameter[] parameters = {
+                new SqlParameter("@ProductID", productId),
+                new SqlParameter("@Moisture", moistureLevel),
+                new SqlParameter("@Stage", stage),
+                new SqlParameter("@Supplier", supplier)
+            };
+            ExecuteNonQuery(query, parameters);
         }
     }
 }
