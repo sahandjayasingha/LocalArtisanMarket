@@ -54,6 +54,12 @@
     <Compile Include="LoginForm.Designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="CustomerDashboard.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomerDashboard.Designer.cs">
+      <DependentUpon>CustomerDashboard.cs</DependentUpon>
+    </Compile>
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -61,14 +67,27 @@
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
     <Compile Include="DatabaseHelper.cs" />
+    <Compile Include="MarketModels.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="User.cs" />
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </EmbeddedResource>
+    <Compile Include="ProductCard.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ProductCard.Designer.cs">
+      <DependentUpon>ProductCard.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="CustomerDashboard.resx">
+      <DependentUpon>CustomerDashboard.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProductCard.resx">
+      <DependentUpon>ProductCard.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
