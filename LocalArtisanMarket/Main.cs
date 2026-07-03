@@ -67,28 +67,58 @@ namespace LocalArtisanMarket
 
         private void btnlogin_Click_1(object sender, EventArgs e)
         {
-            if (btnlogin.Text == "Logout")
+            var button = sender as System.Windows.Forms.Button;
+            if (button != null && button.Text == "Logout")
             {
                 this.panelContent.Controls.Clear();
                 ConfigureNavigation(null);
-                MessageBox.Show("Logged out successfully!", "Session Ended", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Logged out successfully!", "Session Ended", MessageBoxButtons.OK);
                 return;
             }
-
-            LoginForm login = new LoginForm(this);
-            LoadChildForm(login);
         }
 
         
-        private void btnhome_Click(object sender, EventArgs e)
-        {
-            
-            this.panelContent.Controls.Clear();
-
-           
-        }
-
+        
+        
         private void panelSideMenu_Paint(object sender, PaintEventArgs e) { }
         private void panelContent_Paint(object sender, PaintEventArgs e) { }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

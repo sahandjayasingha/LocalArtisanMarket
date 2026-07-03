@@ -105,10 +105,11 @@
             this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelContent.Location = new System.Drawing.Point(200, 0);
             this.panelContent.Margin = new System.Windows.Forms.Padding(4);
+            this.panelContent.Location = new System.Drawing.Point(267, 0);
+            this.panelContent.Margin = new System.Windows.Forms.Padding(4);
             this.panelContent.Name = "panelContent";
             this.panelContent.Size = new System.Drawing.Size(1293, 450);
             this.panelContent.TabIndex = 1;
-            this.panelContent.Paint += new System.Windows.Forms.PaintEventHandler(this.panelContent_Paint);
             // 
             // mainWorkspacePanel
             // 
