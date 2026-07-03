@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LocalArtisanMarket
@@ -20,10 +13,6 @@ namespace LocalArtisanMarket
         private void Main_Load(object sender, EventArgs e)
         {
             ConfigureNavigation(null);
-        }
-
-        private void panelSideMenu_Paint(object sender, PaintEventArgs e)
-        {
         }
 
         public void LoadChildForm(Form childForm)
@@ -76,7 +65,7 @@ namespace LocalArtisanMarket
             }
         }
 
-        private void btnLogin_Click(object sender, EventArgs e)
+        private void btnlogin_Click_1(object sender, EventArgs e)
         {
             if (btnlogin.Text == "Logout")
             {
@@ -86,11 +75,20 @@ namespace LocalArtisanMarket
                 return;
             }
 
-            // LoadChildForm(new LoginForm());
+            LoginForm login = new LoginForm(this);
+            LoadChildForm(login);
         }
 
-        private void panelContent_Paint(object sender, PaintEventArgs e)
+        
+        private void btnhome_Click(object sender, EventArgs e)
         {
+            
+            this.panelContent.Controls.Clear();
+
+           
         }
+
+        private void panelSideMenu_Paint(object sender, PaintEventArgs e) { }
+        private void panelContent_Paint(object sender, PaintEventArgs e) { }
     }
 }
