@@ -48,6 +48,7 @@ namespace LocalArtisanMarket
                             [Role] VARCHAR(20) NOT NULL
                         );
                         INSERT INTO [dbo].[Users] (Email, PasswordHash, Role) VALUES ('customer@gmail.com', '***', 'Customer');
+                        INSERT INTO [dbo].[Users] (Email, PasswordHash, Role) VALUES ('artisan@gmail.com', '***', 'Artisan');
                     END";
 
                 string createProductsTable = @"
