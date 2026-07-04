@@ -7,16 +7,13 @@ namespace LocalArtisanMarket
 {
     public static class DatabaseHelper
     {
-        
-        private static string connectionString = @"Server=DESKTOP-0IHPJNN;Database=LocalArtisanMarketDB;Trusted_Connection=True;";
+        private static string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=LocalArtisanMarketDB;Integrated Security=True;Connect Timeout=30;";
 
-        
         public static SqlConnection GetConnection()
         {
             return new SqlConnection(connectionString);
         }
 
-        
         public static DataTable ExecuteQuery(string query, SqlParameter[] parameters = null)
         {
             using (SqlConnection conn = GetConnection())
@@ -46,7 +43,6 @@ namespace LocalArtisanMarket
             }
         }
 
-        
         public static int ExecuteNonQuery(string query, SqlParameter[] parameters = null)
         {
             using (SqlConnection conn = GetConnection())
@@ -72,7 +68,6 @@ namespace LocalArtisanMarket
             }
         }
 
-        
         public static void LogTelemetryData(int productId, decimal moistureLevel, string stage, string supplier)
         {
             string query = "INSERT INTO MaterialTracking (ProductID, MoistureLevel, ProductionStage, SupplierInfo) VALUES (@ProductID, @Moisture, @Stage, @Supplier)";

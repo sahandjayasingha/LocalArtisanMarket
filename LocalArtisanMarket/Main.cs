@@ -50,6 +50,7 @@ namespace LocalArtisanMarket
                 btnlogin.Text = "Login";
                 btnproducts.Visible = true;
                 btnInventory.Visible = false;
+                this.panelContent.Controls.Clear();
             }
             else if (currentRole == "Artisan")
             {
@@ -68,57 +69,42 @@ namespace LocalArtisanMarket
         private void btnlogin_Click_1(object sender, EventArgs e)
         {
             var button = sender as System.Windows.Forms.Button;
-            if (button != null && button.Text == "Logout")
+            if (button == null) return;
+
+            if (button.Text == "Logout")
             {
                 this.panelContent.Controls.Clear();
                 ConfigureNavigation(null);
-                MessageBox.Show("Logged out successfully!", "Session Ended", MessageBoxButtons.OK);
+                MessageBox.Show("Logged out successfully!", "Session Ended", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
+
+            LoginForm login = new LoginForm(this);
+            LoadChildForm(login);
         }
 
-        
-        
-        
+        private void btnproducts_Click(object sender, EventArgs e)
+        {
+            CustomerDashboard alwisDashboard = new CustomerDashboard();
+            LoadUserControl(alwisDashboard);
+        }
+
+        private void btnHome_Click(object sender, EventArgs e)
+        {
+            this.panelContent.Controls.Clear();
+        }
+
+        private void btnInventory_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void btnproducts_Click_1(object sender, EventArgs e)
+        {
+            CustomerDashboard alwisDashboard = new CustomerDashboard();
+            LoadUserControl(alwisDashboard);
+        }
+
         private void panelSideMenu_Paint(object sender, PaintEventArgs e) { }
         private void panelContent_Paint(object sender, PaintEventArgs e) { }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
