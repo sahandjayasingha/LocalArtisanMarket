@@ -13,25 +13,26 @@ namespace LocalArtisanMarket
 {
     public partial class CustomerDashboard : UserControl
     {
-        // 1. The memory for your shopping cart
+      
         private List<CartItem> shoppingCart = new List<CartItem>();
 
         public CustomerDashboard()
         {
             InitializeComponent();
-            LoadCatalogToScreen(); // FIX 1: This triggers the catalog to load immediately!
+            LoadCatalogToScreen(); 
         }
 
-        // 2. The method to fetch products from the database
-        // 2. The method to fetch products from the database
+       
         private List<Product> GetAvailableProducts()
         {
-            List<Product> products = new List<Product>();
-            string query = "SELECT ProductID, ProductName, Price, Description, Stock FROM Products";
+              List<Product> products = new List<Product>();
+
+           
+            string query = "SELECT ProductID, ProductName, Price, Description, StockQuantity FROM Products";
 
             try
             {
-                // THE FIX: We now use your teammate's Singleton instance to get the connection!
+               
                 using (System.Data.SqlClient.SqlConnection conn = DatabaseHelper.Instance.GetConnection())
                 {
                     using (System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(query, conn))
@@ -47,7 +48,7 @@ namespace LocalArtisanMarket
                                     Name = reader.GetString(1),
                                     Price = reader.GetDecimal(2),
                                     Description = reader.GetString(3),
-                                    StockAvailable = reader.GetInt32(4)
+                                    StockAvailable = reader.GetInt32(4) 
                                 });
                             }
                         }
@@ -61,7 +62,7 @@ namespace LocalArtisanMarket
             return products;
         }
 
-        // FIX 2: The actual code to update your visual shopping cart!
+        
         private void UpdateCartGridView()
         {
             dgvCart.DataSource = null;
@@ -78,7 +79,7 @@ namespace LocalArtisanMarket
                 grandTotal += item.TotalPrice;
             }
 
-            // Make sure you named your label lblTotal in the designer!
+            
             lblTotal.Text = "Total: $" + grandTotal.ToString("0.00");
         }
 
@@ -111,9 +112,14 @@ namespace LocalArtisanMarket
             UpdateCartGridView();
         }
 
-        // Keeping your auto-generated click events so the designer doesn't break
+       
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e) { }
         private void CustomerDashboard_Load(object sender, EventArgs e) { }
         private void dgvCart_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
+
+        private void flowLayoutPanelCatalog_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }
