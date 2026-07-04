@@ -48,7 +48,7 @@
             this.panelSideMenu.Controls.Add(this.btnhome);
             this.panelSideMenu.Dock = System.Windows.Forms.DockStyle.Left;
             this.panelSideMenu.Location = new System.Drawing.Point(0, 0);
-            this.panelSideMenu.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.panelSideMenu.Margin = new System.Windows.Forms.Padding(5);
             this.panelSideMenu.Name = "panelSideMenu";
             this.panelSideMenu.Size = new System.Drawing.Size(267, 554);
             this.panelSideMenu.TabIndex = 0;
@@ -57,7 +57,7 @@
             // btnlogin
             // 
             this.btnlogin.Location = new System.Drawing.Point(5, 373);
-            this.btnlogin.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.btnlogin.Margin = new System.Windows.Forms.Padding(5);
             this.btnlogin.Name = "btnlogin";
             this.btnlogin.Size = new System.Drawing.Size(259, 55);
             this.btnlogin.TabIndex = 3;
@@ -68,7 +68,7 @@
             // btnInventory
             // 
             this.btnInventory.Location = new System.Drawing.Point(5, 274);
-            this.btnInventory.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.btnInventory.Margin = new System.Windows.Forms.Padding(5);
             this.btnInventory.Name = "btnInventory";
             this.btnInventory.Size = new System.Drawing.Size(259, 55);
             this.btnInventory.TabIndex = 2;
@@ -78,26 +78,25 @@
             // btnproducts
             // 
             this.btnproducts.Location = new System.Drawing.Point(5, 177);
-            this.btnproducts.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.btnproducts.Margin = new System.Windows.Forms.Padding(5);
             this.btnproducts.Name = "btnproducts";
             this.btnproducts.Size = new System.Drawing.Size(259, 55);
             this.btnproducts.TabIndex = 1;
             this.btnproducts.Text = "Products";
             this.btnproducts.UseVisualStyleBackColor = true;
-            this.btnproducts.Click += new System.EventHandler(this.btnproducts_Click_1);
             // 
             // btnhome
             // 
             this.btnhome.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnhome.ForeColor = System.Drawing.Color.White;
             this.btnhome.Location = new System.Drawing.Point(5, 76);
-            this.btnhome.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.btnhome.Margin = new System.Windows.Forms.Padding(5);
             this.btnhome.Name = "btnhome";
             this.btnhome.Size = new System.Drawing.Size(259, 55);
             this.btnhome.TabIndex = 0;
             this.btnhome.Text = "Home";
             this.btnhome.UseVisualStyleBackColor = true;
-            this.btnhome.Click += new System.EventHandler(this.btnlogin_Click_1);
+            this.btnhome.Click += new System.EventHandler(this.btnHome_Click);
             // 
             // panelContent
             // 
@@ -105,7 +104,7 @@
             this.panelContent.Controls.Add(this.mainWorkspacePanel);
             this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelContent.Location = new System.Drawing.Point(267, 0);
-            this.panelContent.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.panelContent.Margin = new System.Windows.Forms.Padding(5);
             this.panelContent.Name = "panelContent";
             this.panelContent.Size = new System.Drawing.Size(1657, 554);
             this.panelContent.TabIndex = 1;
@@ -126,11 +125,12 @@
             this.ClientSize = new System.Drawing.Size(1924, 554);
             this.Controls.Add(this.panelContent);
             this.Controls.Add(this.panelSideMenu);
-            this.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.Margin = new System.Windows.Forms.Padding(5);
             this.Name = "Main";
             this.Text = "Main";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.Main_Load);
+            this.Click += new System.EventHandler(this.btnHome_Click);
             this.panelSideMenu.ResumeLayout(false);
             this.panelContent.ResumeLayout(false);
             this.ResumeLayout(false);
