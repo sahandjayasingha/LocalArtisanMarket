@@ -18,6 +18,9 @@ namespace LocalArtisanMarket
             _bll = new ProductBusinessLogic();
         }
 
+     
+
+
         private void ArtisanDashboard_Load(object sender, EventArgs e)
         {
             RefreshGrid();
@@ -63,7 +66,7 @@ namespace LocalArtisanMarket
             try
             {
                 ProductDTO targetProduct = GatherInputData();
-                targetProduct.ProductID = selectedProductId;
+                
 
                 _bll.ProcessProductUpdate(targetProduct);
 
@@ -134,16 +137,21 @@ namespace LocalArtisanMarket
             decimal.TryParse(txtPrice.Text.Trim(), out priceValue);
             int.TryParse(txtStock.Text.Trim(), out stockValue);
 
-            return new ProductDTO
-            {
-                ProductName = txtProductName.Text.Trim(),
-                Price = priceValue,
-                Description = txtDescription.Text.Trim(),
-                Stock = stockValue,
-                OriginHub = txtOriginHub.Text.Trim(),
-                CraftTechnique = txtCraftTechnique.Text.Trim()
-            };
+            // Added default telemetry placeholders (0.0m and "Raw") until Insara links her module controls
+            return new ProductDTO(
+                selectedProductId,
+                txtProductName.Text.Trim(),
+                priceValue,
+                txtDescription.Text.Trim(),
+                stockValue,
+                txtOriginHub.Text.Trim(),
+                txtCraftTechnique.Text.Trim(),
+                0.0m,    // Default Moisture Metric telemetry vector parameter
+                "Raw"    // Default Processing Stage tracking status payload vector
+            );
         }
+
+
 
         private void btnClear_Click(object sender, EventArgs e) => ClearInputs();
 
