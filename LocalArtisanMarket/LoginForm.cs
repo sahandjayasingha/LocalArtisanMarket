@@ -9,6 +9,9 @@ namespace LocalArtisanMarket
     {
         private Main _mainForm;
 
+        public static string CurrentUserID { get; private set; } = null;
+        public static string CurrentUserRole { get; private set; } = null;
+
         public LoginForm()
         {
             InitializeComponent();
@@ -33,7 +36,8 @@ namespace LocalArtisanMarket
 
             try
             {
-                string query = "SELECT UserID, Role FROM Users WHERE Email = ' ' + @Email AND PasswordHash = @Password";
+                string query = "SELECT UserID, Role FROM Users WHERE Email = @Email AND PasswordHash = @Password";
+
                 SqlParameter[] parameters = new SqlParameter[]
                 {
                     new SqlParameter("@Email", email),
@@ -44,12 +48,14 @@ namespace LocalArtisanMarket
 
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    string userRole = dt.Rows[0]["Role"].ToString();
-                    MessageBox.Show("Login Successful! Role: " + userRole, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CurrentUserID = dt.Rows[0]["UserID"].ToString();
+                    CurrentUserRole = dt.Rows[0]["Role"].ToString();
+
+                    MessageBox.Show("Login Successful! Welcome back.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     if (_mainForm != null)
                     {
-                        _mainForm.ConfigureNavigation(userRole);
+                        _mainForm.ConfigureNavigation(CurrentUserRole);
                     }
 
                     this.Close();
