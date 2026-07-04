@@ -1,4 +1,4 @@
-﻿namespace LocalArtisanMarket
+namespace LocalArtisanMarket
 {
     partial class Main
     {
@@ -84,7 +84,7 @@
             this.btnproducts.TabIndex = 1;
             this.btnproducts.Text = "Products";
             this.btnproducts.UseVisualStyleBackColor = true;
-            this.btnproducts.Click += new System.EventHandler(this.btnproducts_Click_1);
+            this.btnproducts.Click += new System.EventHandler(this.btnproducts_Click);
             // 
             // btnhome
             // 
@@ -131,6 +131,7 @@
             this.Text = "Main";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.Main_Load);
+            this.Click += new System.EventHandler(this.btnHome_Click);
             this.panelSideMenu.ResumeLayout(false);
             this.panelContent.ResumeLayout(false);
             this.ResumeLayout(false);

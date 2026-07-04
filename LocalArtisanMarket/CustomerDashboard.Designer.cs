@@ -42,6 +42,7 @@
             this.flowLayoutPanelCatalog.Name = "flowLayoutPanelCatalog";
             this.flowLayoutPanelCatalog.Size = new System.Drawing.Size(705, 629);
             this.flowLayoutPanelCatalog.TabIndex = 0;
+            this.flowLayoutPanelCatalog.Paint += new System.Windows.Forms.PaintEventHandler(this.flowLayoutPanelCatalog_Paint);
             // 
             // dgvCart
             // 
