@@ -31,60 +31,71 @@ namespace LocalArtisanMarket
                     }
                     catch
                     {
-                        return;
                     }
                 }
             }
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string createUsersTable = @"
-                    IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Users]') AND type in (N'U'))
-                    BEGIN
-                        CREATE TABLE [dbo].[Users] (
-                            [UserID] INT IDENTITY(1,1) PRIMARY KEY,
-                            [Email] VARCHAR(100) NOT NULL UNIQUE,
-                            [PasswordHash] VARCHAR(255) NOT NULL,
-                            [Role] VARCHAR(20) NOT NULL
-                        );
-                        INSERT INTO [dbo].[Users] (Email, PasswordHash, Role) VALUES ('customer@gmail.com', '***', 'Customer');
-                        INSERT INTO [dbo].[Users] (Email, PasswordHash, Role) VALUES ('artisan@gmail.com', '***', 'Artisan');
-                    END";
-
-                string createProductsTable = @"
-                    IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Products]') AND type in (N'U'))
-                    BEGIN
-                        CREATE TABLE [dbo].[Products] (
-                            [ProductID] INT IDENTITY(1,1) PRIMARY KEY,
-                            [ProductName] VARCHAR(100) NOT NULL,
-                            [Price] DECIMAL(18,2) NOT NULL,
-                            [Description] TEXT,
-                            [StockQuantity] INT NOT NULL
-                        );
-                    END";
-
-                string createTrackingTable = @"
-                    IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[MaterialTracking]') AND type in (N'U'))
-                    BEGIN
-                        CREATE TABLE [dbo].[MaterialTracking] (
-                            [TrackingID] INT IDENTITY(1,1) PRIMARY KEY,
-                            [ProductID] INT NOT NULL,
-                            [MoistureLevel] DECIMAL(18,2) NOT NULL,
-                            [ProductionStage] VARCHAR(100) NOT NULL,
-                            [SupplierInfo] VARCHAR(255) NOT NULL
-                        );
-                    END";
-
                 try
                 {
                     conn.Open();
+
+                    string createUsersTable = @"
+                        IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Users]') AND type in (N'U'))
+                        BEGIN
+                            CREATE TABLE [dbo].[Users] (
+                                [UserID] INT IDENTITY(1,1) PRIMARY KEY,
+                                [Email] VARCHAR(100) NOT NULL UNIQUE,
+                                [PasswordHash] VARCHAR(255) NOT NULL,
+                                [Role] VARCHAR(20) NOT NULL
+                            );
+                        END";
                     using (SqlCommand cmd = new SqlCommand(createUsersTable, conn)) { cmd.ExecuteNonQuery(); }
+
+                    string insertCustomer = @"
+                        IF NOT EXISTS (SELECT * FROM [dbo].[Users] WHERE Email = 'customer@gmail.com')
+                        BEGIN
+                            INSERT INTO [dbo].[Users] (Email, PasswordHash, Role) VALUES ('customer@gmail.com', '***', 'Customer');
+                        END";
+                    using (SqlCommand cmd = new SqlCommand(insertCustomer, conn)) { cmd.ExecuteNonQuery(); }
+
+                    string insertArtisan = @"
+                        IF NOT EXISTS (SELECT * FROM [dbo].[Users] WHERE Email = 'artisan@gmail.com')
+                        BEGIN
+                            INSERT INTO [dbo].[Users] (Email, PasswordHash, Role) VALUES ('artisan@gmail.com', '***', 'Artisan');
+                        END";
+                    using (SqlCommand cmd = new SqlCommand(insertArtisan, conn)) { cmd.ExecuteNonQuery(); }
+
+                    string createProductsTable = @"
+                        IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Products]') AND type in (N'U'))
+                        BEGIN
+                            CREATE TABLE [dbo].[Products] (
+                                [ProductID] INT IDENTITY(1,1) PRIMARY KEY,
+                                [ProductName] VARCHAR(100) NOT NULL,
+                                [Price] DECIMAL(18,2) NOT NULL,
+                                [Description] TEXT,
+                                [StockQuantity] INT NOT NULL
+                            );
+                        END";
                     using (SqlCommand cmd = new SqlCommand(createProductsTable, conn)) { cmd.ExecuteNonQuery(); }
+
+                    string createTrackingTable = @"
+                        IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[MaterialTracking]') AND type in (N'U'))
+                        BEGIN
+                            CREATE TABLE [dbo].[MaterialTracking] (
+                                [TrackingID] INT IDENTITY(1,1) PRIMARY KEY,
+                                [ProductID] INT NOT NULL,
+                                [MoistureLevel] DECIMAL(18,2) NOT NULL,
+                                [ProductionStage] VARCHAR(100) NOT NULL,
+                                [SupplierInfo] VARCHAR(255) NOT NULL
+                            );
+                        END";
                     using (SqlCommand cmd = new SqlCommand(createTrackingTable, conn)) { cmd.ExecuteNonQuery(); }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    return;
+                    MessageBox.Show("Database Initialization Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
