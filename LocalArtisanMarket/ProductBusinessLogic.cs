@@ -3,6 +3,7 @@ using System.Data;
 
 namespace LocalArtisanMarket
 {
+    // MODULE 1: Deterministic State Validation Engine
     public class ProductBusinessLogic
     {
         private readonly ProductRepository _repository;
@@ -24,9 +25,12 @@ namespace LocalArtisanMarket
             }
         }
 
+        // Transactional State Change Factory for Creations
         public void ProcessProductCreation(ProductDTO product)
         {
-            ValidateProductRules(product);
+            // Enforcing state invariants before passing data to the DAL
+            ValidateStateChangeInvariants(product);
+
             try
             {
                 _repository.AddProduct(product);
@@ -37,12 +41,15 @@ namespace LocalArtisanMarket
             }
         }
 
+        // Transactional State Change Factory for Updates
         public void ProcessProductUpdate(ProductDTO product)
         {
             if (product.ProductID <= 0)
                 throw new ArgumentException("Invalid state transition tracking reference ID.");
 
-            ValidateProductRules(product);
+            // Enforcing state invariants before passing data to the DAL
+            ValidateStateChangeInvariants(product);
+
             try
             {
                 _repository.UpdateProduct(product);
@@ -68,21 +75,30 @@ namespace LocalArtisanMarket
             }
         }
 
-        private void ValidateProductRules(ProductDTO product)
+        /// <summary>
+        /// Strict Execution Boundary Validation Engine
+        /// </summary>
+        private void ValidateStateChangeInvariants(ProductDTO product)
         {
+            // MAPPING CRITERIA: Serializing explicit domain fields
             if (string.IsNullOrWhiteSpace(product.ProductName))
-                throw new ArgumentException("Product configuration missing: Name cannot be blank.");
+                throw new ArgumentException("State validation failure: ProductName configuration parameter cannot be null or blank.");
 
-            // Strict rule: stock cannot accept values below 0
+            // CONSTRAINT CHECK 1: Stock values must undergo checks preventing mathematical negatives.
             if (product.Stock < 0)
-                throw new ArgumentException("Inventory rule violation: Stock state cannot sink below 0 units.");
+                throw new ArgumentException("State validation failure: Inventory rule violation. Stock parameters cannot accept mathematical negatives below 0.");
 
-            // Strict rule: prevent decimal precision truncation
+            // CONSTRAINT CHECK 2: Price custom business rule check to prevent decimal precision truncations in SQL Server.
+            // SQL Server DECIMAL(18,2) scales must be strictly positive and fit safely within standard database precision matrix boundaries.
             if (product.Price <= 0)
-                throw new ArgumentException("Market valuation rule violation: Price calculation state parameters must remain positive.");
+                throw new ArgumentException("State validation failure: Market valuation parameters must strictly resolve to a positive, non-zero asset value.");
+
+            // Ensure the value does not have fractional pennies that SQL Server DECIMAL(18,2) would truncate/round unexpectedly
+            if (decimal.Round(product.Price, 2) != product.Price)
+                throw new ArgumentException("State validation failure: Price variable violates precision constraints. Values cannot extend beyond two decimal places to prevent SQL Server truncation errors.");
 
             if (product.Price > 999999.99m)
-                throw new ArgumentException("Market validation configuration rule threshold restriction: Out-of-bounds decimal scale protection triggered.");
+                throw new ArgumentException("State validation failure: Asset boundary threshold overflow. Price value exceeds enterprise storage configuration scale parameters.");
         }
     }
 }
