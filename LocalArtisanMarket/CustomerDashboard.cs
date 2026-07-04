@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,7 +13,6 @@ namespace LocalArtisanMarket
 {
     public partial class CustomerDashboard : UserControl
     {
-      
         private List<CartItem> shoppingCart = new List<CartItem>();
 
         public CustomerDashboard()
@@ -22,18 +21,14 @@ namespace LocalArtisanMarket
             LoadCatalogToScreen(); 
         }
 
-       
         private List<Product> GetAvailableProducts()
         {
-              List<Product> products = new List<Product>();
-
-           
+            List<Product> products = new List<Product>();
             string query = "SELECT ProductID, ProductName, Price, Description, StockQuantity FROM Products";
 
             try
             {
-               
-                using (System.Data.SqlClient.SqlConnection conn = DatabaseHelper.Instance.GetConnection())
+                using (System.Data.SqlClient.SqlConnection conn = DatabaseHelper.GetConnection())
                 {
                     using (System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(query, conn))
                     {
@@ -62,7 +57,6 @@ namespace LocalArtisanMarket
             return products;
         }
 
-        
         private void UpdateCartGridView()
         {
             dgvCart.DataSource = null;
@@ -79,7 +73,6 @@ namespace LocalArtisanMarket
                 grandTotal += item.TotalPrice;
             }
 
-            
             lblTotal.Text = "Total: $" + grandTotal.ToString("0.00");
         }
 
@@ -112,14 +105,9 @@ namespace LocalArtisanMarket
             UpdateCartGridView();
         }
 
-       
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e) { }
         private void CustomerDashboard_Load(object sender, EventArgs e) { }
         private void dgvCart_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
-
-        private void flowLayoutPanelCatalog_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
+        private void flowLayoutPanelCatalog_Paint(object sender, PaintEventArgs e) { }
     }
 }

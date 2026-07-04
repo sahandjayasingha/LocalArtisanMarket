@@ -9,13 +9,14 @@ namespace LocalArtisanMarket
     {
         private Main _mainForm;
 
-        // Constructor for Designer compatibility
+        public static string CurrentUserID { get; private set; } = null;
+        public static string CurrentUserRole { get; private set; } = null;
+
         public LoginForm()
         {
             InitializeComponent();
         }
 
-        // Constructor passing Main form reference
         public LoginForm(Main mainForm)
         {
             InitializeComponent();
@@ -36,28 +37,25 @@ namespace LocalArtisanMarket
             try
             {
                 string query = "SELECT UserID, Role FROM Users WHERE Email = @Email AND PasswordHash = @Password";
+
                 SqlParameter[] parameters = new SqlParameter[]
                 {
                     new SqlParameter("@Email", email),
-                    new SqlParameter("@Password", password) // Note: Hash checking should be implemented later
+                    new SqlParameter("@Password", password)
                 };
 
                 DataTable dt = DatabaseHelper.ExecuteQuery(query, parameters);
 
-                if (dt != null && dt.Rows.Count > 100) // Adjusted logic check
-                {
-                    // If table has records
-                }
-
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    string userRole = dt.Rows[0]["Role"].ToString();
-                    MessageBox.Show("Login Successful! Role: " + userRole, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CurrentUserID = dt.Rows[0]["UserID"].ToString();
+                    CurrentUserRole = dt.Rows[0]["Role"].ToString();
+
+                    MessageBox.Show("Login Successful! Welcome back.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     if (_mainForm != null)
                     {
-                        // Active navigation based on role if implemented in Main
-                        // _mainForm.ConfigureNavigation(userRole);
+                        _mainForm.ConfigureNavigation(CurrentUserRole);
                     }
 
                     this.Close();
@@ -73,7 +71,6 @@ namespace LocalArtisanMarket
             }
         }
 
-        // Keep these exactly for Designer compatibility to avoid empty pages
         private void LoginForm_Load(object sender, EventArgs e) { }
         private void txtLoginEmail_TextChanged(object sender, EventArgs e) { }
         private void txtLoginPassword_TextChanged(object sender, EventArgs e) { }
