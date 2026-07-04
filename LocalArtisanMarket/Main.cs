@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LocalArtisanMarket
@@ -20,10 +13,6 @@ namespace LocalArtisanMarket
         private void Main_Load(object sender, EventArgs e)
         {
             ConfigureNavigation(null);
-        }
-
-        private void panelSideMenu_Paint(object sender, PaintEventArgs e)
-        {
         }
 
         public void LoadChildForm(Form childForm)
@@ -61,6 +50,7 @@ namespace LocalArtisanMarket
                 btnlogin.Text = "Login";
                 btnproducts.Visible = true;
                 btnInventory.Visible = false;
+                this.panelContent.Controls.Clear();
             }
             else if (currentRole == "Artisan")
             {
@@ -76,9 +66,12 @@ namespace LocalArtisanMarket
             }
         }
 
-        private void btnLogin_Click(object sender, EventArgs e)
+        private void btnlogin_Click_1(object sender, EventArgs e)
         {
-            if (btnlogin.Text == "Logout")
+            var button = sender as System.Windows.Forms.Button;
+            if (button == null) return;
+
+            if (button.Text == "Logout")
             {
                 this.panelContent.Controls.Clear();
                 ConfigureNavigation(null);
@@ -86,11 +79,32 @@ namespace LocalArtisanMarket
                 return;
             }
 
-            // LoadChildForm(new LoginForm());
+            LoginForm login = new LoginForm(this);
+            LoadChildForm(login);
         }
 
-        private void panelContent_Paint(object sender, PaintEventArgs e)
+        private void btnproducts_Click(object sender, EventArgs e)
+        {
+            CustomerDashboard alwisDashboard = new CustomerDashboard();
+            LoadUserControl(alwisDashboard);
+        }
+
+        private void btnHome_Click(object sender, EventArgs e)
+        {
+            this.panelContent.Controls.Clear();
+        }
+
+        private void btnInventory_Click(object sender, EventArgs e)
         {
         }
+
+        private void btnproducts_Click_1(object sender, EventArgs e)
+        {
+            CustomerDashboard alwisDashboard = new CustomerDashboard();
+            LoadUserControl(alwisDashboard);
+        }
+
+        private void panelSideMenu_Paint(object sender, PaintEventArgs e) { }
+        private void panelContent_Paint(object sender, PaintEventArgs e) { }
     }
 }
