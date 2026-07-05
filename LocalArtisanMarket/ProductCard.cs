@@ -30,6 +30,8 @@ namespace LocalArtisanMarket
             lblPrice.Text = "Rs. " + product.Price.ToString("N2");
             lblDescription.Text = product.Description;
 
+            // This is the correct, safe way to load the image. 
+            // I removed the duplicate block that was at the bottom!
             if (!string.IsNullOrWhiteSpace(product.ImagePath))
             {
                 string fullPath = System.IO.Path.Combine(Application.StartupPath, product.ImagePath);
@@ -53,13 +55,12 @@ namespace LocalArtisanMarket
                 btnAddToCart.Enabled = false;
                 btnAddToCart.Text = "Out of Stock";
             }
+        }
 
-            
-            if (!string.IsNullOrWhiteSpace(product.ImagePath) && System.IO.File.Exists(product.ImagePath))
-            {
-                pictureBox1.Image = Image.FromFile(product.ImagePath);
-                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
-            }
+        
+        public int GetSelectedQuantity()
+        {
+            return (int)numQuantity.Value;
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
