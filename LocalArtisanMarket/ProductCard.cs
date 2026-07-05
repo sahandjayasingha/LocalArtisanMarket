@@ -69,5 +69,10 @@ namespace LocalArtisanMarket
                 MessageBox.Show($"Please select a valid quantity. Available stock: {_product.Stock}", "Stock Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
+
+        private void lblPrice_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
