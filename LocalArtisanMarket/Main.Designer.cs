@@ -48,18 +48,18 @@
             this.panelSideMenu.Controls.Add(this.btnhome);
             this.panelSideMenu.Dock = System.Windows.Forms.DockStyle.Left;
             this.panelSideMenu.Location = new System.Drawing.Point(0, 0);
-            this.panelSideMenu.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.panelSideMenu.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panelSideMenu.Name = "panelSideMenu";
-            this.panelSideMenu.Size = new System.Drawing.Size(267, 554);
+            this.panelSideMenu.Size = new System.Drawing.Size(200, 450);
             this.panelSideMenu.TabIndex = 0;
             this.panelSideMenu.Paint += new System.Windows.Forms.PaintEventHandler(this.panelSideMenu_Paint);
             // 
             // btnlogin
             // 
-            this.btnlogin.Location = new System.Drawing.Point(5, 373);
-            this.btnlogin.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.btnlogin.Location = new System.Drawing.Point(4, 303);
+            this.btnlogin.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnlogin.Name = "btnlogin";
-            this.btnlogin.Size = new System.Drawing.Size(259, 55);
+            this.btnlogin.Size = new System.Drawing.Size(194, 45);
             this.btnlogin.TabIndex = 3;
             this.btnlogin.Text = "Login";
             this.btnlogin.UseVisualStyleBackColor = true;
@@ -67,20 +67,20 @@
             // 
             // btnInventory
             // 
-            this.btnInventory.Location = new System.Drawing.Point(5, 274);
-            this.btnInventory.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.btnInventory.Location = new System.Drawing.Point(4, 223);
+            this.btnInventory.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnInventory.Name = "btnInventory";
-            this.btnInventory.Size = new System.Drawing.Size(259, 55);
+            this.btnInventory.Size = new System.Drawing.Size(194, 45);
             this.btnInventory.TabIndex = 2;
             this.btnInventory.Text = "Inventory";
             this.btnInventory.UseVisualStyleBackColor = true;
             // 
             // btnproducts
             // 
-            this.btnproducts.Location = new System.Drawing.Point(5, 177);
-            this.btnproducts.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.btnproducts.Location = new System.Drawing.Point(4, 144);
+            this.btnproducts.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnproducts.Name = "btnproducts";
-            this.btnproducts.Size = new System.Drawing.Size(259, 55);
+            this.btnproducts.Size = new System.Drawing.Size(194, 45);
             this.btnproducts.TabIndex = 1;
             this.btnproducts.Text = "Products";
             this.btnproducts.UseVisualStyleBackColor = true;
@@ -90,43 +90,43 @@
             // 
             this.btnhome.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnhome.ForeColor = System.Drawing.Color.White;
-            this.btnhome.Location = new System.Drawing.Point(5, 76);
-            this.btnhome.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.btnhome.Location = new System.Drawing.Point(4, 62);
+            this.btnhome.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnhome.Name = "btnhome";
-            this.btnhome.Size = new System.Drawing.Size(259, 55);
+            this.btnhome.Size = new System.Drawing.Size(194, 45);
             this.btnhome.TabIndex = 0;
             this.btnhome.Text = "Home";
             this.btnhome.UseVisualStyleBackColor = true;
-            this.btnhome.Click += new System.EventHandler(this.btnlogin_Click_1);
+            this.btnhome.Click += new System.EventHandler(this.btnHome_Click);
             // 
             // panelContent
             // 
             this.panelContent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(249)))), ((int)(((byte)(250)))));
             this.panelContent.Controls.Add(this.mainWorkspacePanel);
             this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelContent.Location = new System.Drawing.Point(267, 0);
-            this.panelContent.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.panelContent.Location = new System.Drawing.Point(200, 0);
+            this.panelContent.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panelContent.Name = "panelContent";
-            this.panelContent.Size = new System.Drawing.Size(1657, 554);
+            this.panelContent.Size = new System.Drawing.Size(828, 450);
             this.panelContent.TabIndex = 1;
             // 
             // mainWorkspacePanel
             // 
             this.mainWorkspacePanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainWorkspacePanel.Location = new System.Drawing.Point(0, 0);
-            this.mainWorkspacePanel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.mainWorkspacePanel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.mainWorkspacePanel.Name = "mainWorkspacePanel";
-            this.mainWorkspacePanel.Size = new System.Drawing.Size(1657, 554);
+            this.mainWorkspacePanel.Size = new System.Drawing.Size(828, 450);
             this.mainWorkspacePanel.TabIndex = 0;
             // 
             // Main
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1924, 554);
+            this.ClientSize = new System.Drawing.Size(1028, 450);
             this.Controls.Add(this.panelContent);
             this.Controls.Add(this.panelSideMenu);
-            this.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "Main";
             this.Text = "Main";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;

@@ -40,92 +40,102 @@
             // lblProductName
             // 
             this.lblProductName.Location = new System.Drawing.Point(20, 20);
-            this.lblProductName.Name = "lblProductName";
             this.lblProductName.Size = new System.Drawing.Size(100, 23);
-            this.lblProductName.TabIndex = 0;
             this.lblProductName.Text = "Product Name:";
             // 
             // txtProductName
             // 
             this.txtProductName.Location = new System.Drawing.Point(130, 20);
-            this.txtProductName.Name = "txtProductName";
             this.txtProductName.Size = new System.Drawing.Size(200, 20);
-            this.txtProductName.TabIndex = 1;
+            this.txtProductName.Name = "txtProductName";
             // 
             // lblPrice
             // 
             this.lblPrice.Location = new System.Drawing.Point(20, 50);
-            this.lblPrice.Name = "lblPrice";
             this.lblPrice.Size = new System.Drawing.Size(100, 23);
-            this.lblPrice.TabIndex = 2;
             this.lblPrice.Text = "Price:";
             // 
             // txtPrice
             // 
             this.txtPrice.Location = new System.Drawing.Point(130, 50);
-            this.txtPrice.Name = "txtPrice";
             this.txtPrice.Size = new System.Drawing.Size(200, 20);
-            this.txtPrice.TabIndex = 3;
+            this.txtPrice.Name = "txtPrice";
             // 
             // lblDescription
             // 
             this.lblDescription.Location = new System.Drawing.Point(20, 80);
-            this.lblDescription.Name = "lblDescription";
             this.lblDescription.Size = new System.Drawing.Size(100, 23);
-            this.lblDescription.TabIndex = 4;
             this.lblDescription.Text = "Description:";
             // 
             // txtDescription
             // 
             this.txtDescription.Location = new System.Drawing.Point(130, 80);
-            this.txtDescription.Name = "txtDescription";
             this.txtDescription.Size = new System.Drawing.Size(200, 20);
-            this.txtDescription.TabIndex = 5;
+            this.txtDescription.Name = "txtDescription";
             // 
             // lblStock
             // 
             this.lblStock.Location = new System.Drawing.Point(20, 110);
-            this.lblStock.Name = "lblStock";
             this.lblStock.Size = new System.Drawing.Size(100, 23);
-            this.lblStock.TabIndex = 6;
             this.lblStock.Text = "Stock Quantity:";
             // 
             // txtStock
             // 
             this.txtStock.Location = new System.Drawing.Point(130, 110);
-            this.txtStock.Name = "txtStock";
             this.txtStock.Size = new System.Drawing.Size(200, 20);
-            this.txtStock.TabIndex = 7;
+            this.txtStock.Name = "txtStock";
             // 
             // lblOriginHub
             // 
             this.lblOriginHub.Location = new System.Drawing.Point(20, 140);
-            this.lblOriginHub.Name = "lblOriginHub";
             this.lblOriginHub.Size = new System.Drawing.Size(100, 23);
-            this.lblOriginHub.TabIndex = 8;
             this.lblOriginHub.Text = "Origin Hub:";
             // 
             // txtOriginHub
             // 
             this.txtOriginHub.Location = new System.Drawing.Point(130, 140);
-            this.txtOriginHub.Name = "txtOriginHub";
             this.txtOriginHub.Size = new System.Drawing.Size(200, 20);
-            this.txtOriginHub.TabIndex = 9;
+            this.txtOriginHub.Name = "txtOriginHub";
             // 
             // lblCraftTechnique
             // 
             this.lblCraftTechnique.Location = new System.Drawing.Point(20, 170);
-            this.lblCraftTechnique.Name = "lblCraftTechnique";
             this.lblCraftTechnique.Size = new System.Drawing.Size(100, 23);
-            this.lblCraftTechnique.TabIndex = 10;
             this.lblCraftTechnique.Text = "Craft Technique:";
             // 
             // txtCraftTechnique
             // 
             this.txtCraftTechnique.Location = new System.Drawing.Point(130, 170);
-            this.txtCraftTechnique.Name = "txtCraftTechnique";
             this.txtCraftTechnique.Size = new System.Drawing.Size(200, 20);
-            this.txtCraftTechnique.TabIndex = 11;
+            this.txtCraftTechnique.Name = "txtCraftTechnique";
+            // 
+            // btnCreate
+            // 
+            this.btnCreate.Location = new System.Drawing.Point(20, 210);
+            this.btnCreate.Size = new System.Drawing.Size(75, 30);
+            this.btnCreate.Text = "Create";
+            this.btnCreate.Name = "btnCreate";
+            // 
+            // btnUpdate
+            // 
+            this.btnUpdate.Location = new System.Drawing.Point(105, 210);
+            this.btnUpdate.Size = new System.Drawing.Size(75, 30);
+            this.btnUpdate.Text = "Update";
+            this.btnUpdate.Name = "btnUpdate";
+            // 
+            // btnDelete
+            // 
+            this.btnDelete.Location = new System.Drawing.Point(190, 210);
+            this.btnDelete.Size = new System.Drawing.Size(75, 30);
+            this.btnDelete.Text = "Delete";
+            this.btnDelete.Name = "btnDelete";
+            // 
+            // btnClear
+            // 
+            this.btnClear.Location = new System.Drawing.Point(275, 210);
+            this.btnClear.Size = new System.Drawing.Size(75, 30);
+            this.btnClear.Text = "Clear";
+            this.btnClear.Name = "btnClear";
             // 
             // dgvProducts
             // 
@@ -133,47 +143,9 @@
             this.dgvProducts.AllowUserToDeleteRows = false;
             this.dgvProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvProducts.Location = new System.Drawing.Point(20, 260);
-            this.dgvProducts.Name = "dgvProducts";
-            this.dgvProducts.ReadOnly = true;
             this.dgvProducts.Size = new System.Drawing.Size(600, 200);
-            this.dgvProducts.TabIndex = 16;
-            this.dgvProducts.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProducts_CellClick);
-            // 
-            // btnCreate
-            // 
-            this.btnCreate.Location = new System.Drawing.Point(20, 210);
-            this.btnCreate.Name = "btnCreate";
-            this.btnCreate.Size = new System.Drawing.Size(75, 30);
-            this.btnCreate.TabIndex = 12;
-            this.btnCreate.Text = "Create";
-            this.btnCreate.Click += new System.EventHandler(this.btnCreate_Click);
-            // 
-            // btnUpdate
-            // 
-            this.btnUpdate.Location = new System.Drawing.Point(105, 210);
-            this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(75, 30);
-            this.btnUpdate.TabIndex = 13;
-            this.btnUpdate.Text = "Update";
-            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
-            // 
-            // btnDelete
-            // 
-            this.btnDelete.Location = new System.Drawing.Point(190, 210);
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(75, 30);
-            this.btnDelete.TabIndex = 14;
-            this.btnDelete.Text = "Delete";
-            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
-            // 
-            // btnClear
-            // 
-            this.btnClear.Location = new System.Drawing.Point(275, 210);
-            this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(75, 30);
-            this.btnClear.TabIndex = 15;
-            this.btnClear.Text = "Clear";
-            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            this.dgvProducts.ReadOnly = true;
+            this.dgvProducts.Name = "dgvProducts";
             // 
             // ArtisanDashboard
             // 
@@ -194,13 +166,10 @@
             this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.btnClear);
             this.Controls.Add(this.dgvProducts);
-            this.Name = "ArtisanDashboard";
-            this.Size = new System.Drawing.Size(775, 466);
-            this.Load += new System.EventHandler(this.ArtisanDashboard_Load);
+            this.Size = new System.Drawing.Size(650, 480);
             ((System.ComponentModel.ISupportInitialize)(this.dgvProducts)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion
