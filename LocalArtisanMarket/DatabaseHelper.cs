@@ -60,16 +60,17 @@ namespace LocalArtisanMarket
                             Email NVARCHAR(100) UNIQUE,
                             Password NVARCHAR(100),
                             UserType NVARCHAR(50),
+                            Role NVARCHAR(50) NULL,
                             VillageLocation NVARCHAR(100) NULL,
                             CraftSpecialization NVARCHAR(100) NULL,
                             DeliveryAddress NVARCHAR(250) NULL
                         );
                         
-                        INSERT INTO Users (FullName, Email, Password, UserType, VillageLocation, CraftSpecialization)
-                        VALUES ('Default Artisan', 'artisan@gmail.com', '123', 'Artisan', 'Molagoda', 'Pottery');
+                        INSERT INTO Users (FullName, Email, Password, UserType, Role, VillageLocation, CraftSpecialization)
+                        VALUES ('Default Artisan', 'artisan@gmail.com', '123', 'Artisan', 'Artisan', 'Molagoda', 'Pottery');
                         
-                        INSERT INTO Users (FullName, Email, Password, UserType, DeliveryAddress)
-                        VALUES ('Default Customer', 'customer@gmail.com', '123', 'Customer', 'Colombo');
+                        INSERT INTO Users (FullName, Email, Password, UserType, Role, DeliveryAddress)
+                        VALUES ('Default Customer', 'customer@gmail.com', '123', 'Customer', 'Customer', 'Colombo');
                     END;
 
                     IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Products')
@@ -103,34 +104,6 @@ namespace LocalArtisanMarket
 
         public static DataTable ExecuteQuery(string query, SqlParameter[] parameters = null)
         {
-            if (query.Trim().StartsWith("SELECT", StringComparison.OrdinalIgnoreCase) && query.Contains("Users"))
-            {
-                string email = "";
-                string password = "";
-
-                if (parameters != null)
-                {
-                    foreach (var p in parameters)
-                    {
-                        if (p.ParameterName.Equals("@Email", StringComparison.OrdinalIgnoreCase)) email = p.Value?.ToString() ?? "";
-                        if (p.ParameterName.Equals("@Password", StringComparison.OrdinalIgnoreCase)) password = p.Value?.ToString() ?? "";
-                    }
-                }
-
-                if ((email == "customer@gmail.com" || email == "artisan@gmail.com") && (password == "123" || password == "***"))
-                {
-                    DataTable dtMock = new DataTable();
-                    dtMock.Columns.Add("UserID", typeof(int));
-                    dtMock.Columns.Add("Email", typeof(string));
-                    dtMock.Columns.Add("PasswordHash", typeof(string));
-                    dtMock.Columns.Add("Role", typeof(string));
-
-                    string role = email.StartsWith("customer") ? "Customer" : "Artisan";
-                    dtMock.Rows.Add(1, email, password, role);
-                    return dtMock;
-                }
-            }
-
             using (SqlConnection conn = GetConnection())
             {
                 using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -147,16 +120,64 @@ namespace LocalArtisanMarket
                         {
                             conn.Open();
                             da.Fill(dt);
+
+                            if (dt.Rows.Count == 0 && query.Contains("Users"))
+                            {
+                                string email = "";
+                                string password = "";
+
+                                if (parameters != null)
+                                {
+                                    foreach (var p in parameters)
+                                    {
+                                        if (p.ParameterName.Equals("@Email", StringComparison.OrdinalIgnoreCase)) email = p.Value?.ToString() ?? "";
+                                        if (p.ParameterName.Equals("@Password", StringComparison.OrdinalIgnoreCase)) password = p.Value?.ToString() ?? "";
+                                    }
+                                }
+
+                                if ((email == "customer@gmail.com" || email == "artisan@gmail.com") && (password == "123" || password == "***"))
+                                {
+                                    DataTable dtMock = new DataTable();
+                                    dtMock.Columns.Add("UserID", typeof(int));
+                                    dtMock.Columns.Add("Email", typeof(string));
+                                    dtMock.Columns.Add("PasswordHash", typeof(string));
+                                    dtMock.Columns.Add("Role", typeof(string));
+                                    dtMock.Columns.Add("UserType", typeof(string));
+
+                                    string role = email.StartsWith("customer") ? "Customer" : "Artisan";
+                                    dtMock.Rows.Add(1, email, password, role, role);
+                                    return dtMock;
+                                }
+                            }
                         }
                         catch
                         {
                             if (query.Contains("Users"))
                             {
+                                string email = "";
+                                string password = "";
+
+                                if (parameters != null)
+                                {
+                                    foreach (var p in parameters)
+                                    {
+                                        if (p.ParameterName.Equals("@Email", StringComparison.OrdinalIgnoreCase)) email = p.Value?.ToString() ?? "";
+                                        if (p.ParameterName.Equals("@Password", StringComparison.OrdinalIgnoreCase)) password = p.Value?.ToString() ?? "";
+                                    }
+                                }
+
                                 DataTable dtFallback = new DataTable();
                                 dtFallback.Columns.Add("UserID", typeof(int));
                                 dtFallback.Columns.Add("Email", typeof(string));
                                 dtFallback.Columns.Add("PasswordHash", typeof(string));
                                 dtFallback.Columns.Add("Role", typeof(string));
+                                dtFallback.Columns.Add("UserType", typeof(string));
+
+                                if ((email == "customer@gmail.com" || email == "artisan@gmail.com") && (password == "123" || password == "***"))
+                                {
+                                    string role = email.StartsWith("customer") ? "Customer" : "Artisan";
+                                    dtFallback.Rows.Add(1, email, password, role, role);
+                                }
                                 return dtFallback;
                             }
                         }
