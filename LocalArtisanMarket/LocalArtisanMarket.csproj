@@ -73,6 +73,12 @@
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
     <Compile Include="DatabaseHelper.cs" />
+    <Compile Include="MaterialTrackingPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MaterialTrackingPanel.Designer.cs">
+      <DependentUpon>MaterialTrackingPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="ProductBusinessLogic.cs" />
     <Compile Include="ProductDTO.cs" />
     <Compile Include="ProductRepository.cs" />
