@@ -38,7 +38,7 @@ namespace LocalArtisanMarket
                 {
                     foreach (ProductDTO dto in dtos)
                     {
-                        // This passes the DTO directly to the card (Fixes CS1503)
+                        
                         ProductCard card = new ProductCard(dto);
                         card.OnAddToCart += Card_OnAddToCart;
                         flowLayoutPanelCatalog.Controls.Add(card);
@@ -47,7 +47,6 @@ namespace LocalArtisanMarket
             }
             catch (Exception ex)
             {
-                // Using 'ex' here fixes the unused variable warning (CS0168)
                 MessageBox.Show("Error loading products: " + ex.Message);
             }
         }
@@ -69,7 +68,7 @@ namespace LocalArtisanMarket
                 grandTotal += item.TotalPrice;
             }
 
-            lblTotal.Text = "Total: $" + grandTotal.ToString("0.00");
+            lblTotal.Text = "Total: Rs" + grandTotal.ToString("0.00");
         }
 
         private void Card_OnAddToCart(object sender, ProductDTO itemToAdd)
@@ -91,7 +90,7 @@ namespace LocalArtisanMarket
             }
             else
             {
-                // Line 108 Fix: We pass the itemToAdd (which is a ProductDTO) directly!
+                
                 shoppingCart.Add(new CartItem { SelectedProduct = itemToAdd, Quantity = quantityToAdd });
             }
 
