@@ -25,6 +25,7 @@ namespace LocalArtisanMarket
 
             LoadCatalogToScreen();
         }
+
         private void LoadCatalogToScreen()
         {
             flowLayoutPanelCatalog.Controls.Clear();
@@ -38,7 +39,6 @@ namespace LocalArtisanMarket
                 {
                     foreach (ProductDTO dto in dtos)
                     {
-                        
                         ProductCard card = new ProductCard(dto);
                         card.OnAddToCart += Card_OnAddToCart;
                         flowLayoutPanelCatalog.Controls.Add(card);
@@ -51,38 +51,79 @@ namespace LocalArtisanMarket
             }
         }
 
-
         private void UpdateCartGridView()
         {
+            // 1. THE NUKE: Erase the data AND completely destroy any ghost columns
             dgvCart.DataSource = null;
-            dgvCart.DataSource = shoppingCart;
+            dgvCart.Columns.Clear(); // <--- This wipes out those empty blank columns!
 
+            // 2. Bind the fresh data
+            dgvCart.DataSource = shoppingCart.ToList();
+
+            // 3. Hide the default grey row-selector column
+            dgvCart.RowHeadersVisible = false;
+
+            // 4. Hide the raw underlying data object
             if (dgvCart.Columns["SelectedProduct"] != null)
             {
                 dgvCart.Columns["SelectedProduct"].Visible = false;
             }
 
+            DataGridViewButtonColumn removeBtn = new DataGridViewButtonColumn();
+            removeBtn.Name = "RemoveBtn";
+            removeBtn.HeaderText = "Action";
+            removeBtn.Text = "❌";
+            removeBtn.UseColumnTextForButtonValue = true;
+            removeBtn.Width = 50;
+            removeBtn.FlatStyle = FlatStyle.Flat;
+            dgvCart.Columns.Add(removeBtn);
+
+
+
+            if (dgvCart.Columns["Name"] != null)
+            {
+                dgvCart.Columns["Name"].HeaderText = "Name";
+                dgvCart.Columns["Name"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                dgvCart.Columns["Name"].DisplayIndex = 0; 
+            }
+
+            if (dgvCart.Columns["Quantity"] != null)
+            {
+                dgvCart.Columns["Quantity"].HeaderText = "Qty";
+                dgvCart.Columns["Quantity"].Width = 50;
+                dgvCart.Columns["Quantity"].DisplayIndex = 1; 
+            }
+
+            if (dgvCart.Columns["TotalPrice"] != null)
+            {
+                dgvCart.Columns["TotalPrice"].HeaderText = "Price";
+                dgvCart.Columns["TotalPrice"].DefaultCellStyle.Format = "N2";
+                dgvCart.Columns["TotalPrice"].DisplayIndex = 2; 
+            }
+
+            if (dgvCart.Columns["RemoveBtn"] != null)
+            {
+                dgvCart.Columns["RemoveBtn"].DisplayIndex = 3; 
+            }
+
+           
             decimal grandTotal = 0;
             foreach (var item in shoppingCart)
             {
                 grandTotal += item.TotalPrice;
             }
 
-            lblTotal.Text = "Total:Rs " + grandTotal.ToString("0.00");
+            lblTotal.Text = "Total: Rs " + grandTotal.ToString("0.00");
         }
-
         private void Card_OnAddToCart(object sender, ProductDTO itemToAdd)
         {
-            
             ProductCard clickedCard = sender as ProductCard;
-            if (clickedCard == null) return; 
+            if (clickedCard == null) return;
 
             var existingItem = shoppingCart.FirstOrDefault(i => i.SelectedProduct.ProductID == itemToAdd.ProductID);
             int currentQtyInCart = existingItem != null ? existingItem.Quantity : 0;
 
-            
             int quantityToAdd = clickedCard.GetSelectedQuantity();
-
             int requestedTotalQty = currentQtyInCart + quantityToAdd;
 
             if (requestedTotalQty > itemToAdd.Stock)
@@ -106,7 +147,6 @@ namespace LocalArtisanMarket
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e) { }
         private void CustomerDashboard_Load(object sender, EventArgs e) { }
-        private void dgvCart_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
         private void flowLayoutPanelCatalog_Paint(object sender, PaintEventArgs e) { }
 
         private void btnCheckout_Click(object sender, EventArgs e)
@@ -121,7 +161,6 @@ namespace LocalArtisanMarket
 
             _isCartError = false;
             this.Invalidate();
-
 
             bool success = DatabaseHelper.ProcessCheckoutBatch(shoppingCart);
 
@@ -153,6 +192,29 @@ namespace LocalArtisanMarket
             lblStatus.Text = message;
             lblStatus.ForeColor = isError ? Color.Red : Color.Green;
             lblStatus.Visible = true;
+        }
+
+        // This is the correct, single version of the click event!
+        private void dgvCart_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            // Make sure they clicked a valid row AND they clicked our specific Remove button
+            if (e.RowIndex >= 0 && dgvCart.Columns[e.ColumnIndex].Name == "RemoveBtn")
+            {
+                string itemName = shoppingCart[e.RowIndex].Name;
+
+                DialogResult dialogResult = MessageBox.Show(
+                    $"Are you sure you want to remove '{itemName}' from your cart?",
+                    "Remove Item",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning);
+
+                if (dialogResult == DialogResult.Yes)
+                {
+                    shoppingCart.RemoveAt(e.RowIndex);
+                    UpdateCartGridView();
+                    ShowInlineNotification($"{itemName} removed from cart.", false);
+                }
+            }
         }
     }
 }
