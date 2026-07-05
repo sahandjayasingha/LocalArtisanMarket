@@ -33,6 +33,7 @@
             this.lblPrice = new System.Windows.Forms.Label();
             this.numQuantity = new System.Windows.Forms.NumericUpDown();
             this.btnAddToCart = new System.Windows.Forms.Button();
+            this.lblDescription = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numQuantity)).BeginInit();
             this.SuspendLayout();
@@ -40,9 +41,9 @@
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.pictureBox1.Location = new System.Drawing.Point(25, 15);
+            this.pictureBox1.Location = new System.Drawing.Point(3, 3);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(195, 170);
+            this.pictureBox1.Size = new System.Drawing.Size(269, 237);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
@@ -50,24 +51,26 @@
             // lblTitle
             // 
             this.lblTitle.AutoSize = true;
-            this.lblTitle.Location = new System.Drawing.Point(22, 202);
+            this.lblTitle.Font = new System.Drawing.Font("Microsoft YaHei", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTitle.Location = new System.Drawing.Point(7, 252);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(44, 16);
+            this.lblTitle.Size = new System.Drawing.Size(128, 24);
             this.lblTitle.TabIndex = 1;
-            this.lblTitle.Text = "Name";
+            this.lblTitle.Text = "Wooden bowl";
             // 
             // lblPrice
             // 
             this.lblPrice.AutoSize = true;
-            this.lblPrice.Location = new System.Drawing.Point(22, 263);
+            this.lblPrice.Font = new System.Drawing.Font("Microsoft YaHei", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPrice.Location = new System.Drawing.Point(7, 366);
             this.lblPrice.Name = "lblPrice";
-            this.lblPrice.Size = new System.Drawing.Size(37, 16);
+            this.lblPrice.Size = new System.Drawing.Size(53, 24);
             this.lblPrice.TabIndex = 2;
             this.lblPrice.Text = "price";
             // 
             // numQuantity
             // 
-            this.numQuantity.Location = new System.Drawing.Point(167, 202);
+            this.numQuantity.Location = new System.Drawing.Point(221, 255);
             this.numQuantity.Name = "numQuantity";
             this.numQuantity.Size = new System.Drawing.Size(38, 22);
             this.numQuantity.TabIndex = 3;
@@ -76,24 +79,35 @@
             // 
             this.btnAddToCart.BackColor = System.Drawing.Color.Yellow;
             this.btnAddToCart.Font = new System.Drawing.Font("Stencil", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAddToCart.Location = new System.Drawing.Point(119, 263);
+            this.btnAddToCart.Location = new System.Drawing.Point(147, 366);
             this.btnAddToCart.Name = "btnAddToCart";
-            this.btnAddToCart.Size = new System.Drawing.Size(101, 23);
+            this.btnAddToCart.Size = new System.Drawing.Size(125, 36);
             this.btnAddToCart.TabIndex = 4;
             this.btnAddToCart.Text = "Add to Cart";
             this.btnAddToCart.UseVisualStyleBackColor = false;
+            // 
+            // lblDescription
+            // 
+            this.lblDescription.AutoEllipsis = true;
+            this.lblDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDescription.Location = new System.Drawing.Point(8, 287);
+            this.lblDescription.Name = "lblDescription";
+            this.lblDescription.Size = new System.Drawing.Size(251, 63);
+            this.lblDescription.TabIndex = 5;
+            this.lblDescription.Text = "Handcrafted wooden bowl made from sustainable oak";
             // 
             // ProductCard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.lblDescription);
             this.Controls.Add(this.btnAddToCart);
             this.Controls.Add(this.numQuantity);
             this.Controls.Add(this.lblPrice);
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.pictureBox1);
             this.Name = "ProductCard";
-            this.Size = new System.Drawing.Size(243, 333);
+            this.Size = new System.Drawing.Size(275, 411);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numQuantity)).EndInit();
             this.ResumeLayout(false);
@@ -108,5 +122,6 @@
         private System.Windows.Forms.Label lblPrice;
         private System.Windows.Forms.NumericUpDown numQuantity;
         private System.Windows.Forms.Button btnAddToCart;
+        private System.Windows.Forms.Label lblDescription;
     }
 }
