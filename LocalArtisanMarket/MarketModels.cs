@@ -1,13 +1,31 @@
-﻿using System;
+﻿using LocalArtisanMarket;
 
-namespace LocalArtisanMarket
+public class CartItem
 {
-   
+    
+    public ProductDTO SelectedProduct { get; set; }
 
-    public class CartItem
+
+    public string Name
     {
-        public ProductDTO SelectedProduct { get; set; }
-        public int Quantity { get; set; }
-        public decimal TotalPrice => SelectedProduct.Price * Quantity;
+        get
+        {
+            if (SelectedProduct != null) return SelectedProduct.ProductName;
+            return "";
+        }
+    }
+
+    public int Quantity { get; set; }
+
+    public decimal TotalPrice
+    {
+        get
+        {
+            if (SelectedProduct != null)
+            {
+                return SelectedProduct.Price * Quantity;
+            }
+            return 0;
+        }
     }
 }
