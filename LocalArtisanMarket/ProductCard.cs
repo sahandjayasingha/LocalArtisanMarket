@@ -26,11 +26,19 @@ namespace LocalArtisanMarket
             InitializeComponent();
             _product = product;
 
-
             lblTitle.Text = product.ProductName;
             lblPrice.Text = "Rs. " + product.Price.ToString("N2");
             lblDescription.Text = product.Description;
 
+            if (!string.IsNullOrWhiteSpace(product.ImagePath))
+            {
+                string fullPath = System.IO.Path.Combine(Application.StartupPath, product.ImagePath);
+                if (System.IO.File.Exists(fullPath))
+                {
+                    pictureBox1.Image = Image.FromFile(fullPath);
+                    pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+                }
+            }
 
             if (product.Stock > 0)
             {
@@ -56,7 +64,7 @@ namespace LocalArtisanMarket
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void btnAddToCart_Click(object sender, EventArgs e)
