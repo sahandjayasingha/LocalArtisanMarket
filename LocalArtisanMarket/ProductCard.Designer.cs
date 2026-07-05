@@ -67,7 +67,7 @@
             this.lblPrice.Size = new System.Drawing.Size(59, 27);
             this.lblPrice.TabIndex = 2;
             this.lblPrice.Text = "price";
-            this.lblPrice.Click += new System.EventHandler(this.lblPrice_Click);
+            
             // 
             // numQuantity
             // 

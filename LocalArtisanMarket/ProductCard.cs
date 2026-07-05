@@ -70,9 +70,6 @@ namespace LocalArtisanMarket
             }
         }
 
-        private void lblPrice_Click(object sender, EventArgs e)
-        {
-
-        }
+        
     }
 }
