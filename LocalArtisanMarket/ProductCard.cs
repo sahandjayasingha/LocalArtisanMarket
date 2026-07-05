@@ -26,33 +26,37 @@ namespace LocalArtisanMarket
             InitializeComponent();
             _product = product;
 
-            
+
             lblTitle.Text = product.ProductName;
             lblPrice.Text = "Rs. " + product.Price.ToString("N2");
-
-            
             lblDescription.Text = product.Description;
 
-            
+
             if (product.Stock > 0)
             {
                 numQuantity.Minimum = 1;
-                numQuantity.Maximum = product.Stock; 
+                numQuantity.Maximum = product.Stock;
                 numQuantity.Value = 1;
                 btnAddToCart.Enabled = true;
             }
             else
             {
-                
                 numQuantity.Enabled = false;
                 btnAddToCart.Enabled = false;
                 btnAddToCart.Text = "Out of Stock";
+            }
+
+            
+            if (!string.IsNullOrWhiteSpace(product.ImagePath) && System.IO.File.Exists(product.ImagePath))
+            {
+                pictureBox1.Image = Image.FromFile(product.ImagePath);
+                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             }
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-           
+            
         }
 
         private void btnAddToCart_Click(object sender, EventArgs e)
@@ -69,7 +73,5 @@ namespace LocalArtisanMarket
                 MessageBox.Show($"Please select a valid quantity. Available stock: {_product.Stock}", "Stock Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
-        
     }
 }
