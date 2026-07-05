@@ -68,14 +68,21 @@ namespace LocalArtisanMarket
                 grandTotal += item.TotalPrice;
             }
 
-            lblTotal.Text = "Total: Rs" + grandTotal.ToString("0.00");
+            lblTotal.Text = "Total:Rs " + grandTotal.ToString("0.00");
         }
 
         private void Card_OnAddToCart(object sender, ProductDTO itemToAdd)
         {
+            
+            ProductCard clickedCard = sender as ProductCard;
+            if (clickedCard == null) return; 
+
             var existingItem = shoppingCart.FirstOrDefault(i => i.SelectedProduct.ProductID == itemToAdd.ProductID);
             int currentQtyInCart = existingItem != null ? existingItem.Quantity : 0;
-            int quantityToAdd = 1;
+
+            
+            int quantityToAdd = clickedCard.GetSelectedQuantity();
+
             int requestedTotalQty = currentQtyInCart + quantityToAdd;
 
             if (requestedTotalQty > itemToAdd.Stock)
@@ -90,7 +97,6 @@ namespace LocalArtisanMarket
             }
             else
             {
-                
                 shoppingCart.Add(new CartItem { SelectedProduct = itemToAdd, Quantity = quantityToAdd });
             }
 

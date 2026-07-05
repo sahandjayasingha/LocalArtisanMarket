@@ -85,6 +85,7 @@
             this.btnAddToCart.TabIndex = 4;
             this.btnAddToCart.Text = "Add to Cart";
             this.btnAddToCart.UseVisualStyleBackColor = false;
+            this.btnAddToCart.Click += new System.EventHandler(this.btnAddToCart_Click);
             // 
             // lblDescription
             // 

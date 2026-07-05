@@ -30,6 +30,8 @@ namespace LocalArtisanMarket
             lblPrice.Text = "Rs. " + product.Price.ToString("N2");
             lblDescription.Text = product.Description;
 
+            // This is the correct, safe way to load the image. 
+            // I removed the duplicate block that was at the bottom!
             if (!string.IsNullOrWhiteSpace(product.ImagePath))
             {
                 string fullPath = System.IO.Path.Combine(Application.StartupPath, product.ImagePath);
