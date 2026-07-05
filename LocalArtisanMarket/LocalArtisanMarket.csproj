@@ -54,6 +54,9 @@
     <Compile Include="ArtisanDashboard.Designer.cs">
       <DependentUpon>ArtisanDashboard.cs</DependentUpon>
     </Compile>
+    <Compile Include="CraftStoryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
