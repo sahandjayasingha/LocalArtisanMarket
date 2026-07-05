@@ -11,11 +11,14 @@
         public string OriginHub { get; }
         public string CraftTechnique { get; }
 
-        // Extended material vectors for Insara's telemetry subsystem
+  
         public decimal MoistureMetric { get; }
         public string ProcessingStage { get; }
 
-        public ProductDTO(int productId, string productName, decimal price, string description, int stock, string originHub, string craftTechnique, decimal moistureMetric, string processingStage)
+ 
+        public string ImagePath { get; }
+
+        public ProductDTO(int productId, string productName, decimal price, string description, int stock, string originHub, string craftTechnique, decimal moistureMetric, string processingStage, string imagePath = "")
         {
             ProductID = productId;
             ProductName = productName;
@@ -26,6 +29,7 @@
             CraftTechnique = craftTechnique;
             MoistureMetric = moistureMetric;
             ProcessingStage = processingStage;
+            ImagePath = imagePath;
         }
     }
 }

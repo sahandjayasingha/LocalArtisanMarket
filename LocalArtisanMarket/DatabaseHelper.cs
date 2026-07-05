@@ -62,8 +62,11 @@ namespace LocalArtisanMarket
                             conn.Open();
                             da.Fill(dt);
                         }
-                        catch
+                        catch (Exception ex)
                         {
+                          
+                            MessageBox.Show("Read Error (ExecuteQuery): \n\n" + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
                             if (query.Contains("Users"))
                             {
                                 DataTable dtFallback = new DataTable();
@@ -96,8 +99,10 @@ namespace LocalArtisanMarket
                         conn.Open();
                         return cmd.ExecuteNonQuery();
                     }
-                    catch
+                    catch (Exception ex)
                     {
+                        
+                        MessageBox.Show("Write Error (ExecuteNonQuery): \n\n" + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return -1;
                     }
                 }
@@ -118,12 +123,9 @@ namespace LocalArtisanMarket
 
         public static bool ProcessCheckoutBatch(List<CartItem> cart)
         {
-
             using (System.Data.SqlClient.SqlConnection conn = GetConnection())
             {
                 conn.Open();
-
-
                 System.Data.SqlClient.SqlTransaction transaction = conn.BeginTransaction();
 
                 using (System.Data.SqlClient.SqlCommand cmd = conn.CreateCommand())
@@ -132,7 +134,6 @@ namespace LocalArtisanMarket
 
                     try
                     {
-                       
                         cmd.CommandText = "UPDATE Products SET StockQuantity = StockQuantity - @quantity WHERE ProductID = @id AND StockQuantity >= @quantity";
 
                         cmd.Parameters.Add("@quantity", System.Data.SqlDbType.Int);
@@ -143,6 +144,7 @@ namespace LocalArtisanMarket
                             cmd.Parameters["@quantity"].Value = item.Quantity;
                             cmd.Parameters["@id"].Value = item.SelectedProduct.ProductID;
 
+                            
                             int rowsAffected = cmd.ExecuteNonQuery();
 
                             if (rowsAffected == 0)
@@ -155,16 +157,15 @@ namespace LocalArtisanMarket
                         transaction.Commit();
                         return true;
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        
+                        MessageBox.Show("Checkout Error: \n\n" + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         try
                         {
                             transaction.Rollback();
                         }
                         catch
                         {
-                            
                         }
                         return false;
                     }
