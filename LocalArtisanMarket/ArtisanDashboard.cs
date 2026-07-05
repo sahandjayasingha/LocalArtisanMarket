@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace LocalArtisanMarket
@@ -9,32 +10,114 @@ namespace LocalArtisanMarket
         private int selectedProductId = -1;
         private readonly ProductBusinessLogic _bll;
 
-        // Keeping your connection variable public as required by the other layers
+        private Label lblImageLabel;
+        private TextBox txtImagePath;
+        private Button btnBrowseImage;
+
         public static string ConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=LocalArtisanMarketDb;Integrated Security=True;";
 
         public ArtisanDashboard()
         {
             InitializeComponent();
             _bll = new ProductBusinessLogic();
+
+            this.Load += new System.EventHandler(this.ArtisanDashboard_Load);
+
+            if (btnCreate != null) btnCreate.Click += new System.EventHandler(this.btnCreate_Click);
+            if (btnUpdate != null) btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
+            if (btnDelete != null) btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            if (btnClear != null) btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            if (dgvProducts != null) dgvProducts.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProducts_CellClick);
         }
-
-     
-
 
         private void ArtisanDashboard_Load(object sender, EventArgs e)
         {
+            CreateImageControlsRuntime();
             RefreshGrid();
+        }
+
+        private void CreateImageControlsRuntime()
+        {
+            if (txtImagePath != null) return;
+
+            Control referenceControl = null;
+            if (this.Controls.ContainsKey("txtCraftTechnique")) referenceControl = this.Controls["txtCraftTechnique"];
+            else if (this.Controls.ContainsKey("txtCraft")) referenceControl = this.Controls["txtCraft"];
+
+            int startX = referenceControl != null ? referenceControl.Location.X : 214;
+            int startY = referenceControl != null ? referenceControl.Location.Y + 35 : 220;
+            int controlWidth = referenceControl != null ? referenceControl.Width : 200;
+            Font controlFont = referenceControl != null ? referenceControl.Font : this.Font;
+
+            lblImageLabel = new Label();
+            lblImageLabel.Text = "Product Image:";
+            lblImageLabel.Location = new Point(startX - 110, startY + 3);
+            lblImageLabel.AutoSize = true;
+            lblImageLabel.Font = controlFont;
+
+            txtImagePath = new TextBox();
+            txtImagePath.Location = new Point(startX, startY);
+            txtImagePath.Size = new Size(controlWidth - 95, 20);
+            txtImagePath.ReadOnly = true;
+
+            btnBrowseImage = new Button();
+            btnBrowseImage.Text = "Browse";
+            btnBrowseImage.Location = new Point(txtImagePath.Location.X + txtImagePath.Width + 5, txtImagePath.Location.Y - 2);
+            btnBrowseImage.Size = new Size(90, 24);
+            btnBrowseImage.Click += new System.EventHandler(this.btnBrowseImage_Click);
+
+            this.Controls.Add(lblImageLabel);
+            this.Controls.Add(txtImagePath);
+            this.Controls.Add(btnBrowseImage);
+
+            if (btnCreate != null) btnCreate.Location = new Point(btnCreate.Location.X, txtImagePath.Location.Y + 40);
+            if (btnUpdate != null) btnUpdate.Location = new Point(btnUpdate.Location.X, txtImagePath.Location.Y + 40);
+            if (btnDelete != null) btnDelete.Location = new Point(btnDelete.Location.X, txtImagePath.Location.Y + 40);
+            if (btnClear != null) btnClear.Location = new Point(btnClear.Location.X, txtImagePath.Location.Y + 40);
+            if (dgvProducts != null) dgvProducts.Location = new Point(dgvProducts.Location.X, btnCreate.Location.Y + 45);
         }
 
         private void RefreshGrid()
         {
             try
             {
+                dgvProducts.DataSource = null;
                 dgvProducts.DataSource = _bll.GetCatalog();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Application Notice", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void btnBrowseImage_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                ofd.Filter = "Image Files(*.jpg; *.jpeg; *.png; *.bmp)|*.jpg; *.jpeg; *.png; *.bmp";
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        string imagesDir = System.IO.Path.Combine(Application.StartupPath, "ProductImages");
+                        if (!System.IO.Directory.Exists(imagesDir))
+                        {
+                            System.IO.Directory.CreateDirectory(imagesDir);
+                        }
+
+                        string extension = System.IO.Path.GetExtension(ofd.FileName);
+                        string newFileName = Guid.NewGuid().ToString() + extension;
+                        string destPath = System.IO.Path.Combine(imagesDir, newFileName);
+
+                        System.IO.File.Copy(ofd.FileName, destPath, true);
+
+                        txtImagePath.Text = System.IO.Path.Combine("ProductImages", newFileName);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Image processing error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
             }
         }
 
@@ -66,8 +149,6 @@ namespace LocalArtisanMarket
             try
             {
                 ProductDTO targetProduct = GatherInputData();
-                
-
                 _bll.ProcessProductUpdate(targetProduct);
 
                 MessageBox.Show("Inventory tracking state configuration updates processed accurately.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -105,7 +186,6 @@ namespace LocalArtisanMarket
             }
         }
 
-        // Encapsulated Entity Mapping: Bypasses column indexing to protect cell mutations
         private void dgvProducts_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -119,8 +199,16 @@ namespace LocalArtisanMarket
                     txtPrice.Text = selectedRow.Cells["Price"].Value?.ToString();
                     txtDescription.Text = selectedRow.Cells["Description"].Value?.ToString();
                     txtStock.Text = selectedRow.Cells["Stock"].Value?.ToString();
-                    txtOriginHub.Text = selectedRow.Cells["OriginHub"].Value?.ToString();
-                    txtCraftTechnique.Text = selectedRow.Cells["CraftTechnique"].Value?.ToString();
+
+                    if (selectedRow.Cells["OriginHub"] != null) txtOriginHub.Text = selectedRow.Cells["OriginHub"].Value?.ToString();
+
+                    if (dgvProducts.Columns.Contains("CraftTechnique"))
+                        txtCraftTechnique.Text = selectedRow.Cells["CraftTechnique"].Value?.ToString();
+
+                    if (dgvProducts.Columns.Contains("ImagePath") && selectedRow.Cells["ImagePath"].Value != null)
+                    {
+                        txtImagePath.Text = selectedRow.Cells["ImagePath"].Value.ToString();
+                    }
                 }
                 catch (Exception)
                 {
@@ -137,7 +225,8 @@ namespace LocalArtisanMarket
             decimal.TryParse(txtPrice.Text.Trim(), out priceValue);
             int.TryParse(txtStock.Text.Trim(), out stockValue);
 
-            // Added default telemetry placeholders (0.0m and "Raw") until Insara links her module controls
+            string imgPath = txtImagePath != null ? txtImagePath.Text.Trim() : "";
+
             return new ProductDTO(
                 selectedProductId,
                 txtProductName.Text.Trim(),
@@ -145,13 +234,12 @@ namespace LocalArtisanMarket
                 txtDescription.Text.Trim(),
                 stockValue,
                 txtOriginHub.Text.Trim(),
-                txtCraftTechnique.Text.Trim(),
-                0.0m,    // Default Moisture Metric telemetry vector parameter
-                "Raw"    // Default Processing Stage tracking status payload vector
+                (txtCraftTechnique != null ? txtCraftTechnique.Text.Trim() : ""),
+                0.0m,
+                "Raw",
+                imgPath
             );
         }
-
-
 
         private void btnClear_Click(object sender, EventArgs e) => ClearInputs();
 
@@ -163,7 +251,8 @@ namespace LocalArtisanMarket
             txtDescription.Clear();
             txtStock.Clear();
             txtOriginHub.Clear();
-            txtCraftTechnique.Clear();
+            if (txtCraftTechnique != null) txtCraftTechnique.Clear();
+            if (txtImagePath != null) txtImagePath.Clear();
         }
     }
 }

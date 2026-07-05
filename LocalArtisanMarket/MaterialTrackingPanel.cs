@@ -84,8 +84,9 @@ namespace LocalArtisanMarket
                 string originHub = txtSupplierInfo.Text.Trim();
                 string craftTech = rowCellString(dgvTelemetryGrid.CurrentRow, "CraftTechnique");
                 string prodStage = cmbProductionStage.Text.Trim();
+                string imgPath = dgvTelemetryGrid.CurrentRow.Cells["ImagePath"] != null ? rowCellString(dgvTelemetryGrid.CurrentRow, "ImagePath") : "";
 
-                ProductDTO telemetryPayload = new ProductDTO(pId, pName, pPrice, pDesc, pStock, originHub, craftTech, moisture, prodStage);
+                ProductDTO telemetryPayload = new ProductDTO(pId, pName, pPrice, pDesc, pStock, originHub, craftTech, moisture, prodStage, imgPath);
 
                 _bll.ProcessProductUpdate(telemetryPayload);
                 MessageBox.Show("Craft production metrics recorded successfully.", "Telemetry Live Sync", MessageBoxButtons.OK, MessageBoxIcon.Information);

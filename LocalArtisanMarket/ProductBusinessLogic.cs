@@ -4,44 +4,26 @@ using System.Collections.Generic;
 
 namespace LocalArtisanMarket
 {
-    
     public class ProductBusinessLogic
     {
-        private readonly ProductRepository _repository;
+        private static List<ProductDTO> _dummyCatalog = new List<ProductDTO>()
+        {
+            new ProductDTO(1, "Molagoda Traditional Clay Pot", 15.50m, "Authentic Sri Lankan clay pot", 10, "Molagoda Hub", "Pottery", 12.50m, "Baked", ""),
+            new ProductDTO(2, "Radawadunna Cane Basket", 25.00m, "Handcrafted durable cane basket", 5, "Radawadunna Hub", "Weaving", 8.20m, "Ready", ""),
+            new ProductDTO(3, "Handwoven Dumbara Mat", 35.00m, "Traditional design Dumbara mat", 8, "Kandy Hub", "Handloom", 5.00m, "Raw", "")
+        };
+
+        private static int _nextProductId = 4;
 
         public ProductBusinessLogic()
         {
-            _repository = new ProductRepository();
         }
 
-        
         public List<ProductDTO> GetCatalog()
         {
             try
             {
-                
-                DataTable dt = _repository.GetAllProducts();
-
-                List<ProductDTO> catalogList = new List<ProductDTO>();
-
-                foreach (DataRow row in dt.Rows)
-                {
-                    ProductDTO dto = new ProductDTO(
-                        Convert.ToInt32(row["ProductID"]),
-                        row["ProductName"].ToString(),
-                        Convert.ToDecimal(row["Price"]),
-                        row["Description"].ToString(),
-                        Convert.ToInt32(row["Stock"]),
-                        row["OriginHub"].ToString(),
-                        row["CraftTechnique"].ToString(),
-                        Convert.ToDecimal(row["MoistureMetric"]),
-                        row["ProcessingStage"].ToString()
-                    );
-
-                    catalogList.Add(dto);
-                }
-
-                return catalogList;
+                return new List<ProductDTO>(_dummyCatalog);
             }
             catch (Exception ex)
             {
@@ -49,15 +31,25 @@ namespace LocalArtisanMarket
             }
         }
 
-
         public void ProcessProductCreation(ProductDTO product)
         {
-
             ValidateStateChangeInvariants(product);
 
             try
             {
-                _repository.AddProduct(product);
+                ProductDTO productWithId = new ProductDTO(
+                    _nextProductId++,
+                    product.ProductName,
+                    product.Price,
+                    product.Description,
+                    product.Stock,
+                    product.OriginHub,
+                    product.CraftTechnique,
+                    product.MoistureMetric,
+                    product.ProcessingStage,
+                    product.ImagePath
+                );
+                _dummyCatalog.Add(productWithId);
             }
             catch (Exception ex)
             {
@@ -65,18 +57,20 @@ namespace LocalArtisanMarket
             }
         }
 
-
         public void ProcessProductUpdate(ProductDTO product)
         {
             if (product.ProductID <= 0)
                 throw new ArgumentException("Invalid state transition tracking reference ID.");
 
-
             ValidateStateChangeInvariants(product);
 
             try
             {
-                _repository.UpdateProduct(product);
+                var existingIndex = _dummyCatalog.FindIndex(p => p.ProductID == product.ProductID);
+                if (existingIndex != -1)
+                {
+                    _dummyCatalog[existingIndex] = product;
+                }
             }
             catch (Exception ex)
             {
@@ -91,7 +85,11 @@ namespace LocalArtisanMarket
 
             try
             {
-                _repository.DeleteProduct(productId);
+                var existing = _dummyCatalog.Find(p => p.ProductID == productId);
+                if (existing != null)
+                {
+                    _dummyCatalog.Remove(existing);
+                }
             }
             catch (Exception ex)
             {
@@ -99,24 +97,19 @@ namespace LocalArtisanMarket
             }
         }
 
-      
         private void ValidateStateChangeInvariants(ProductDTO product)
         {
-
             if (string.IsNullOrWhiteSpace(product.ProductName))
                 throw new ArgumentException("State validation failure: ProductName configuration parameter cannot be null or blank.");
-
 
             if (product.Stock < 0)
                 throw new ArgumentException("State validation failure: Inventory rule violation. Stock parameters cannot accept mathematical negatives below 0.");
 
-
             if (product.Price <= 0)
                 throw new ArgumentException("State validation failure: Market valuation parameters must strictly resolve to a positive, non-zero asset value.");
 
-
             if (decimal.Round(product.Price, 2) != product.Price)
-                throw new ArgumentException("State validation failure: Price variable violates precision constraints. Values cannot extend beyond two decimal places to prevent SQL Server truncation errors.");
+                throw new ArgumentException("State validation failure: Price variable violates precision constraints. Values cannot extend beyond two decimal places.");
 
             if (product.Price > 999999.99m)
                 throw new ArgumentException("State validation failure: Asset boundary threshold overflow. Price value exceeds enterprise storage configuration scale parameters.");
