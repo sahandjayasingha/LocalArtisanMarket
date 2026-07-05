@@ -53,6 +53,13 @@ namespace LocalArtisanMarket
                 btnAddToCart.Enabled = false;
                 btnAddToCart.Text = "Out of Stock";
             }
+
+            
+            if (!string.IsNullOrWhiteSpace(product.ImagePath) && System.IO.File.Exists(product.ImagePath))
+            {
+                pictureBox1.Image = Image.FromFile(product.ImagePath);
+                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            }
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
