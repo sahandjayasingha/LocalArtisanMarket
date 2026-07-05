@@ -9,7 +9,6 @@ namespace LocalArtisanMarket
         private readonly ProductBusinessLogic _bll;
         private int currentSelectedProductId = -1;
 
-
         public MaterialTrackingPanel()
         {
             InitializeComponent();
@@ -21,7 +20,6 @@ namespace LocalArtisanMarket
             LoadTelemetryCatalog();
         }
 
-        // Asynchronously reflects the catalog domain directly onto the tracking viewport layout
         private void LoadTelemetryCatalog()
         {
             try
@@ -34,7 +32,6 @@ namespace LocalArtisanMarket
             }
         }
 
-        // Real-time cell click synchronization to capture data linked to the selected ProductID
         private void dgvTelemetryGrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -46,7 +43,6 @@ namespace LocalArtisanMarket
                     currentSelectedProductId = Convert.ToInt32(row.Cells["ProductID"].Value);
                     lblSelectedProduct.Text = $"Active Tracking Product ID: {currentSelectedProductId}";
 
-                    // Safely pulling telemetry data from the active data grid row matrix
                     txtMoistureLevel.Text = row.Cells["MoistureMetric"].Value?.ToString() ?? "0.00";
                     cmbProductionStage.Text = row.Cells["ProcessingStage"].Value?.ToString() ?? "Raw";
                     txtSupplierInfo.Text = row.Cells["OriginHub"].Value?.ToString() ?? "";
@@ -66,8 +62,7 @@ namespace LocalArtisanMarket
                 return;
             }
 
-            // CRITERIA RULE: Immediate numerical validation checks at the UI level
-            if (!decimal.TryParse(txtMoistureLevel.Text.Trim(), out decimal moisture) || moisture < 0.00m || moisture > 100.00m)
+            if (!decimal.TryParse(txtMoistureLevel.Text, out decimal moisture) || moisture < 0 || moisture > 100)
             {
                 MessageBox.Show("UI Validation Fault: Moisture level metrics must strictly resolve to a numeric value between 0.00% and 100.00%.", "Range Constraint Violation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -81,18 +76,16 @@ namespace LocalArtisanMarket
 
             try
             {
-                // Re-packaging tracking vectors into our safe ProductDTO construct to pass through the BLL
-                ProductDTO telemetryPayload = new ProductDTO(
-                    currentSelectedProductId,
-                    rowCellString(dgvTelemetryGrid.CurrentRow, "ProductName"),
-                    Convert.ToDecimal(dgvTelemetryGrid.CurrentRow.Cells["Price"].Value),
-                    rowCellString(dgvTelemetryGrid.CurrentRow, "Description"),
-                    Convert.ToInt32(dgvTelemetryGrid.CurrentRow.Cells["Stock"].Value),
-                    txtSupplierInfo.Text.Trim(), // Maps directly to OriginHub field schema mapping criteria
-                    rowCellString(dgvTelemetryGrid.CurrentRow, "CraftTechnique"),
-                    moisture,
-                    cmbProductionStage.Text.Trim()
-                );
+                int pId = currentSelectedProductId;
+                string pName = rowCellString(dgvTelemetryGrid.CurrentRow, "ProductName");
+                decimal pPrice = Convert.ToDecimal(dgvTelemetryGrid.CurrentRow.Cells["Price"].Value);
+                string pDesc = rowCellString(dgvTelemetryGrid.CurrentRow, "Description");
+                int pStock = Convert.ToInt32(dgvTelemetryGrid.CurrentRow.Cells["Stock"].Value);
+                string originHub = txtSupplierInfo.Text.Trim();
+                string craftTech = rowCellString(dgvTelemetryGrid.CurrentRow, "CraftTechnique");
+                string prodStage = cmbProductionStage.Text.Trim();
+
+                ProductDTO telemetryPayload = new ProductDTO(pId, pName, pPrice, pDesc, pStock, originHub, craftTech, moisture, prodStage);
 
                 _bll.ProcessProductUpdate(telemetryPayload);
                 MessageBox.Show("Craft production metrics recorded successfully.", "Telemetry Live Sync", MessageBoxButtons.OK, MessageBoxIcon.Information);
