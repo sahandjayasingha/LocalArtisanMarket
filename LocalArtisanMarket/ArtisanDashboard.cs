@@ -14,6 +14,12 @@ namespace LocalArtisanMarket
         private TextBox txtImagePath;
         private Button btnBrowseImage;
 
+        private Label lblStoryTextLabel;
+        private TextBox txtStoryText;
+        private Label lblStoryImageLabel;
+        private TextBox txtStoryImagePath;
+        private Button btnBrowseStoryImage;
+
         public static string ConnectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=LocalArtisanMarketDb;Integrated Security=True;";
 
         public ArtisanDashboard()
@@ -66,14 +72,46 @@ namespace LocalArtisanMarket
             btnBrowseImage.Size = new Size(90, 24);
             btnBrowseImage.Click += new System.EventHandler(this.btnBrowseImage_Click);
 
+            lblStoryTextLabel = new Label();
+            lblStoryTextLabel.Text = "Craft Story Text:";
+            lblStoryTextLabel.Location = new Point(startX - 110, startY + 35);
+            lblStoryTextLabel.AutoSize = true;
+            lblStoryTextLabel.Font = controlFont;
+
+            txtStoryText = new TextBox();
+            txtStoryText.Location = new Point(startX, startY + 32);
+            txtStoryText.Size = new Size(controlWidth, 20);
+
+            lblStoryImageLabel = new Label();
+            lblStoryImageLabel.Text = "Story Image:";
+            lblStoryImageLabel.Location = new Point(startX - 110, startY + 65);
+            lblStoryImageLabel.AutoSize = true;
+            lblStoryImageLabel.Font = controlFont;
+
+            txtStoryImagePath = new TextBox();
+            txtStoryImagePath.Location = new Point(startX, startY + 62);
+            txtStoryImagePath.Size = new Size(controlWidth - 95, 20);
+            txtStoryImagePath.ReadOnly = true;
+
+            btnBrowseStoryImage = new Button();
+            btnBrowseStoryImage.Text = "Browse";
+            btnBrowseStoryImage.Location = new Point(txtStoryImagePath.Location.X + txtStoryImagePath.Width + 5, txtStoryImagePath.Location.Y - 2);
+            btnBrowseStoryImage.Size = new Size(90, 24);
+            btnBrowseStoryImage.Click += new System.EventHandler(this.btnBrowseStoryImage_Click);
+
             this.Controls.Add(lblImageLabel);
             this.Controls.Add(txtImagePath);
             this.Controls.Add(btnBrowseImage);
+            this.Controls.Add(lblStoryTextLabel);
+            this.Controls.Add(txtStoryText);
+            this.Controls.Add(lblStoryImageLabel);
+            this.Controls.Add(txtStoryImagePath);
+            this.Controls.Add(btnBrowseStoryImage);
 
-            if (btnCreate != null) btnCreate.Location = new Point(btnCreate.Location.X, txtImagePath.Location.Y + 40);
-            if (btnUpdate != null) btnUpdate.Location = new Point(btnUpdate.Location.X, txtImagePath.Location.Y + 40);
-            if (btnDelete != null) btnDelete.Location = new Point(btnDelete.Location.X, txtImagePath.Location.Y + 40);
-            if (btnClear != null) btnClear.Location = new Point(btnClear.Location.X, txtImagePath.Location.Y + 40);
+            if (btnCreate != null) btnCreate.Location = new Point(btnCreate.Location.X, txtStoryImagePath.Location.Y + 40);
+            if (btnUpdate != null) btnUpdate.Location = new Point(btnUpdate.Location.X, txtStoryImagePath.Location.Y + 40);
+            if (btnDelete != null) btnDelete.Location = new Point(btnDelete.Location.X, txtStoryImagePath.Location.Y + 40);
+            if (btnClear != null) btnClear.Location = new Point(btnClear.Location.X, txtStoryImagePath.Location.Y + 40);
             if (dgvProducts != null) dgvProducts.Location = new Point(dgvProducts.Location.X, btnCreate.Location.Y + 45);
         }
 
@@ -116,6 +154,33 @@ namespace LocalArtisanMarket
                     catch (Exception ex)
                     {
                         MessageBox.Show("Image processing error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private void btnBrowseStoryImage_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                ofd.Filter = "Image Files(*.jpg; *.jpeg; *.png; *.bmp)|*.jpg; *.jpeg; *.png; *.bmp";
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        string imagesDir = System.IO.Path.Combine(Application.StartupPath, "ProductImages");
+                        if (!System.IO.Directory.Exists(imagesDir)) System.IO.Directory.CreateDirectory(imagesDir);
+
+                        string extension = System.IO.Path.GetExtension(ofd.FileName);
+                        string newFileName = "story_" + Guid.NewGuid().ToString() + extension;
+                        string destPath = System.IO.Path.Combine(imagesDir, newFileName);
+
+                        System.IO.File.Copy(ofd.FileName, destPath, true);
+                        txtStoryImagePath.Text = System.IO.Path.Combine("ProductImages", newFileName);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Story Image processing error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -205,10 +270,9 @@ namespace LocalArtisanMarket
                     if (dgvProducts.Columns.Contains("CraftTechnique"))
                         txtCraftTechnique.Text = selectedRow.Cells["CraftTechnique"].Value?.ToString();
 
-                    if (dgvProducts.Columns.Contains("ImagePath") && selectedRow.Cells["ImagePath"].Value != null)
-                    {
-                        txtImagePath.Text = selectedRow.Cells["ImagePath"].Value.ToString();
-                    }
+                    txtImagePath.Text = dgvProducts.Columns.Contains("ImagePath") && selectedRow.Cells["ImagePath"].Value != null ? selectedRow.Cells["ImagePath"].Value.ToString() : "";
+                    txtStoryText.Text = dgvProducts.Columns.Contains("StoryText") && selectedRow.Cells["StoryText"].Value != null ? selectedRow.Cells["StoryText"].Value.ToString() : "";
+                    txtStoryImagePath.Text = dgvProducts.Columns.Contains("StoryImagePath") && selectedRow.Cells["StoryImagePath"].Value != null ? selectedRow.Cells["StoryImagePath"].Value.ToString() : "";
                 }
                 catch (Exception)
                 {
@@ -225,8 +289,6 @@ namespace LocalArtisanMarket
             decimal.TryParse(txtPrice.Text.Trim(), out priceValue);
             int.TryParse(txtStock.Text.Trim(), out stockValue);
 
-            string imgPath = txtImagePath != null ? txtImagePath.Text.Trim() : "";
-
             return new ProductDTO(
                 selectedProductId,
                 txtProductName.Text.Trim(),
@@ -237,7 +299,9 @@ namespace LocalArtisanMarket
                 (txtCraftTechnique != null ? txtCraftTechnique.Text.Trim() : ""),
                 0.0m,
                 "Raw",
-                imgPath
+                (txtImagePath != null ? txtImagePath.Text.Trim() : ""),
+                (txtStoryText != null ? txtStoryText.Text.Trim() : ""),
+                (txtStoryImagePath != null ? txtStoryImagePath.Text.Trim() : "")
             );
         }
 
@@ -253,6 +317,8 @@ namespace LocalArtisanMarket
             txtOriginHub.Clear();
             if (txtCraftTechnique != null) txtCraftTechnique.Clear();
             if (txtImagePath != null) txtImagePath.Clear();
+            if (txtStoryText != null) txtStoryText.Clear();
+            if (txtStoryImagePath != null) txtStoryImagePath.Clear();
         }
     }
 }
