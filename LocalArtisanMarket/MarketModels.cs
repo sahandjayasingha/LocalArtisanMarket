@@ -13,7 +13,7 @@ namespace LocalArtisanMarket
 
     public class CartItem
     {
-        public Product SelectedProduct { get; set; }
+        public ProductDTO SelectedProduct { get; set; }
         public int Quantity { get; set; }
         public decimal TotalPrice => SelectedProduct.Price * Quantity;
     }

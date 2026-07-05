@@ -7,14 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Menu;
 
 namespace LocalArtisanMarket
 {
     public partial class CustomerDashboard : UserControl
     {
         private List<CartItem> shoppingCart = new List<CartItem>();
-         private bool _isCartError = false;
+        private bool _isCartError = false;
+
         public CustomerDashboard()
         {
             InitializeComponent();
@@ -23,44 +23,35 @@ namespace LocalArtisanMarket
             btnCheckout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             btnCheckout.Padding = new Padding(10, 5, 10, 5);
 
-            LoadCatalogToScreen(); 
+            LoadCatalogToScreen();
         }
-
-        private List<Product> GetAvailableProducts()
+        private void LoadCatalogToScreen()
         {
-            List<Product> products = new List<Product>();
-            string query = "SELECT ProductID, ProductName, Price, Description, StockQuantity FROM Products";
+            flowLayoutPanelCatalog.Controls.Clear();
 
             try
             {
-                using (System.Data.SqlClient.SqlConnection conn = DatabaseHelper.GetConnection())
+                ProductBusinessLogic businessLogic = new ProductBusinessLogic();
+                List<ProductDTO> dtos = businessLogic.GetCatalog();
+
+                if (dtos != null)
                 {
-                    using (System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(query, conn))
+                    foreach (ProductDTO dto in dtos)
                     {
-                        conn.Open();
-                        using (System.Data.SqlClient.SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                products.Add(new Product
-                                {
-                                    ProductID = reader.GetInt32(0),
-                                    Name = reader.GetString(1),
-                                    Price = reader.GetDecimal(2),
-                                    Description = reader.GetString(3),
-                                    StockAvailable = reader.GetInt32(4) 
-                                });
-                            }
-                        }
+                        // This passes the DTO directly to the card (Fixes CS1503)
+                        ProductCard card = new ProductCard(dto);
+                        card.OnAddToCart += Card_OnAddToCart;
+                        flowLayoutPanelCatalog.Controls.Add(card);
                     }
                 }
             }
             catch (Exception ex)
             {
+                // Using 'ex' here fixes the unused variable warning (CS0168)
                 MessageBox.Show("Error loading products: " + ex.Message);
             }
-            return products;
         }
+
 
         private void UpdateCartGridView()
         {
@@ -81,45 +72,31 @@ namespace LocalArtisanMarket
             lblTotal.Text = "Total: $" + grandTotal.ToString("0.00");
         }
 
-        private void LoadCatalogToScreen()
+        private void Card_OnAddToCart(object sender, ProductDTO itemToAdd)
         {
-            List<Product> products = GetAvailableProducts();
-            flowLayoutPanelCatalog.Controls.Clear();
-             
-            foreach (Product p in products)
-            {
-                ProductCard card = new ProductCard(p);
-                card.OnAddToCart += Card_OnAddToCart;
-                flowLayoutPanelCatalog.Controls.Add(card);
-            }
-        }
-
-        private void Card_OnAddToCart(object sender, CartItem itemToAdd)
-        {
-            var existingItem = shoppingCart.FirstOrDefault(i => i.SelectedProduct.ProductID == itemToAdd.SelectedProduct.ProductID);
-
- 
+            var existingItem = shoppingCart.FirstOrDefault(i => i.SelectedProduct.ProductID == itemToAdd.ProductID);
             int currentQtyInCart = existingItem != null ? existingItem.Quantity : 0;
-            int requestedTotalQty = currentQtyInCart + itemToAdd.Quantity;
+            int quantityToAdd = 1;
+            int requestedTotalQty = currentQtyInCart + quantityToAdd;
 
-      
-            if (requestedTotalQty > itemToAdd.SelectedProduct.StockAvailable)
+            if (requestedTotalQty > itemToAdd.Stock)
             {
-                ShowInlineNotification($"Cannot add {itemToAdd.SelectedProduct.Name}. Insufficient stock.", true);
+                ShowInlineNotification($"Cannot add {itemToAdd.ProductName}. Insufficient stock.", true);
                 return;
             }
 
             if (existingItem != null)
             {
-                existingItem.Quantity += itemToAdd.Quantity;
+                existingItem.Quantity += quantityToAdd;
             }
             else
             {
-                shoppingCart.Add(itemToAdd);
+                // Line 108 Fix: We pass the itemToAdd (which is a ProductDTO) directly!
+                shoppingCart.Add(new CartItem { SelectedProduct = itemToAdd, Quantity = quantityToAdd });
             }
 
             UpdateCartGridView();
-            ShowInlineNotification($"{itemToAdd.SelectedProduct.Name} added to cart.", false);
+            ShowInlineNotification($"{itemToAdd.ProductName} added to cart.", false);
         }
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e) { }
@@ -132,7 +109,7 @@ namespace LocalArtisanMarket
             if (shoppingCart.Count == 0)
             {
                 _isCartError = true;
-                this.Invalidate(); 
+                this.Invalidate();
                 ShowInlineNotification("Cart is empty. Please add items to checkout.", true);
                 return;
             }
@@ -140,15 +117,15 @@ namespace LocalArtisanMarket
             _isCartError = false;
             this.Invalidate();
 
-           
+
             bool success = DatabaseHelper.ProcessCheckoutBatch(shoppingCart);
 
             if (success)
             {
-                shoppingCart.Clear(); 
-                UpdateCartGridView(); 
+                shoppingCart.Clear();
+                UpdateCartGridView();
                 ShowInlineNotification("Checkout successful! Thank you.", false);
-                LoadCatalogToScreen(); 
+                LoadCatalogToScreen();
             }
             else
             {
@@ -156,13 +133,11 @@ namespace LocalArtisanMarket
             }
         }
 
-        
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
             if (_isCartError)
             {
-                
                 Rectangle rect = new Rectangle(dgvCart.Location.X - 2, dgvCart.Location.Y - 2, dgvCart.Width + 4, dgvCart.Height + 4);
                 ControlPaint.DrawBorder(e.Graphics, rect, Color.Red, ButtonBorderStyle.Solid);
             }
