@@ -19,14 +19,11 @@ namespace LocalArtisanMarket
         public ProductCard()
         {
             InitializeComponent();
-            if (pictureBox1 != null) pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
         }
 
         public ProductCard(ProductDTO product)
         {
             InitializeComponent();
-            if (pictureBox1 != null) pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
-
             _product = product;
 
             lblTitle.Text = product.ProductName;
