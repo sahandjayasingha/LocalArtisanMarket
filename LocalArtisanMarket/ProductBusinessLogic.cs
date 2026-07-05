@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Data;
+using System.Collections.Generic;
 
 namespace LocalArtisanMarket
 {
-    // MODULE 1: Deterministic State Validation Engine
+    
     public class ProductBusinessLogic
     {
         private readonly ProductRepository _repository;
@@ -13,11 +14,34 @@ namespace LocalArtisanMarket
             _repository = new ProductRepository();
         }
 
-        public DataTable GetCatalog()
+        
+        public List<ProductDTO> GetCatalog()
         {
             try
             {
-                return _repository.GetAllProducts();
+                
+                DataTable dt = _repository.GetAllProducts();
+
+                List<ProductDTO> catalogList = new List<ProductDTO>();
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    ProductDTO dto = new ProductDTO(
+                        Convert.ToInt32(row["ProductID"]),
+                        row["ProductName"].ToString(),
+                        Convert.ToDecimal(row["Price"]),
+                        row["Description"].ToString(),
+                        Convert.ToInt32(row["Stock"]),
+                        row["OriginHub"].ToString(),
+                        row["CraftTechnique"].ToString(),
+                        Convert.ToDecimal(row["MoistureMetric"]),
+                        row["ProcessingStage"].ToString()
+                    );
+
+                    catalogList.Add(dto);
+                }
+
+                return catalogList;
             }
             catch (Exception ex)
             {
@@ -25,10 +49,10 @@ namespace LocalArtisanMarket
             }
         }
 
-        // Transactional State Change Factory for Creations
+
         public void ProcessProductCreation(ProductDTO product)
         {
-            // Enforcing state invariants before passing data to the DAL
+
             ValidateStateChangeInvariants(product);
 
             try
@@ -41,13 +65,13 @@ namespace LocalArtisanMarket
             }
         }
 
-        // Transactional State Change Factory for Updates
+
         public void ProcessProductUpdate(ProductDTO product)
         {
             if (product.ProductID <= 0)
                 throw new ArgumentException("Invalid state transition tracking reference ID.");
 
-            // Enforcing state invariants before passing data to the DAL
+
             ValidateStateChangeInvariants(product);
 
             try
@@ -75,25 +99,22 @@ namespace LocalArtisanMarket
             }
         }
 
-        /// <summary>
-        /// Strict Execution Boundary Validation Engine
-        /// </summary>
+      
         private void ValidateStateChangeInvariants(ProductDTO product)
         {
-            // MAPPING CRITERIA: Serializing explicit domain fields
+
             if (string.IsNullOrWhiteSpace(product.ProductName))
                 throw new ArgumentException("State validation failure: ProductName configuration parameter cannot be null or blank.");
 
-            // CONSTRAINT CHECK 1: Stock values must undergo checks preventing mathematical negatives.
+
             if (product.Stock < 0)
                 throw new ArgumentException("State validation failure: Inventory rule violation. Stock parameters cannot accept mathematical negatives below 0.");
 
-            // CONSTRAINT CHECK 2: Price custom business rule check to prevent decimal precision truncations in SQL Server.
-            // SQL Server DECIMAL(18,2) scales must be strictly positive and fit safely within standard database precision matrix boundaries.
+
             if (product.Price <= 0)
                 throw new ArgumentException("State validation failure: Market valuation parameters must strictly resolve to a positive, non-zero asset value.");
 
-            // Ensure the value does not have fractional pennies that SQL Server DECIMAL(18,2) would truncate/round unexpectedly
+
             if (decimal.Round(product.Price, 2) != product.Price)
                 throw new ArgumentException("State validation failure: Price variable violates precision constraints. Values cannot extend beyond two decimal places to prevent SQL Server truncation errors.");
 

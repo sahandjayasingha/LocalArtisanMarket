@@ -155,7 +155,7 @@ namespace LocalArtisanMarket
                         transaction.Commit();
                         return true;
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         
                         try

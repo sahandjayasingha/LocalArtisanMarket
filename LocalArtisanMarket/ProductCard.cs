@@ -7,43 +7,45 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Menu;
 
 namespace LocalArtisanMarket
 {
     public partial class ProductCard : UserControl
     {
-        private Product _product;
+        private ProductDTO _product;
 
-        
-        public event EventHandler<CartItem> OnAddToCart;
-        public ProductCard(Product product)
+        public event EventHandler<ProductDTO> OnAddToCart;
+
+        public ProductCard()
+        {
+            InitializeComponent();
+        }
+
+        public ProductCard(ProductDTO product)
         {
             InitializeComponent();
             _product = product;
 
-            lblTitle.Text = product.Name;
-            lblPrice.Text = "$" + product.Price.ToString("0.00");
+            lblTitle.Text = product.ProductName;
+            lblPrice.Text = "Rs. " + product.Price.ToString("N2");
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-
         }
 
         private void btnAddToCart_Click(object sender, EventArgs e)
         {
             int requestedQty = (int)numQuantity.Value;
 
-            if (requestedQty > 0 && requestedQty <= _product.StockAvailable)
+            if (requestedQty > 0 && requestedQty <= _product.Stock)
             {
-                
-                CartItem newItem = new CartItem { SelectedProduct = _product, Quantity = requestedQty };
-                OnAddToCart?.Invoke(this, newItem);
+                OnAddToCart?.Invoke(this, _product);
+                MessageBox.Show($"{_product.ProductName} ({requestedQty}) added to cart successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
-                MessageBox.Show("Please select a valid quantity.", "Stock Warning");
+                MessageBox.Show($"Please select a valid quantity. Available stock: {_product.Stock}", "Stock Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
     }
