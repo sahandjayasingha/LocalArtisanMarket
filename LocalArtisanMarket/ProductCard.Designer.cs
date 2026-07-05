@@ -40,9 +40,9 @@
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.pictureBox1.Location = new System.Drawing.Point(25, 18);
+            this.pictureBox1.Location = new System.Drawing.Point(25, 15);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(156, 144);
+            this.pictureBox1.Size = new System.Drawing.Size(195, 170);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
@@ -50,7 +50,7 @@
             // lblTitle
             // 
             this.lblTitle.AutoSize = true;
-            this.lblTitle.Location = new System.Drawing.Point(25, 184);
+            this.lblTitle.Location = new System.Drawing.Point(22, 202);
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(44, 16);
             this.lblTitle.TabIndex = 1;
@@ -67,7 +67,7 @@
             // 
             // numQuantity
             // 
-            this.numQuantity.Location = new System.Drawing.Point(143, 184);
+            this.numQuantity.Location = new System.Drawing.Point(167, 202);
             this.numQuantity.Name = "numQuantity";
             this.numQuantity.Size = new System.Drawing.Size(38, 22);
             this.numQuantity.TabIndex = 3;
@@ -76,7 +76,7 @@
             // 
             this.btnAddToCart.BackColor = System.Drawing.Color.Yellow;
             this.btnAddToCart.Font = new System.Drawing.Font("Stencil", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAddToCart.Location = new System.Drawing.Point(80, 263);
+            this.btnAddToCart.Location = new System.Drawing.Point(119, 263);
             this.btnAddToCart.Name = "btnAddToCart";
             this.btnAddToCart.Size = new System.Drawing.Size(101, 23);
             this.btnAddToCart.TabIndex = 4;
@@ -93,8 +93,7 @@
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.pictureBox1);
             this.Name = "ProductCard";
-            this.Size = new System.Drawing.Size(200, 300);
-            this.Load += new System.EventHandler(this.ProductCard_Load);
+            this.Size = new System.Drawing.Size(243, 333);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numQuantity)).EndInit();
             this.ResumeLayout(false);
