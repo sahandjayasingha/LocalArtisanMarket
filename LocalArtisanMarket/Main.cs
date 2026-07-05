@@ -146,10 +146,8 @@ namespace LocalArtisanMarket
 
         private void btnInventory_Click(object sender, EventArgs e)
         {
-            if (loggedInRole == "Artisan")
-            {
-                MessageBox.Show("Loading Inventory Tracking Module...", "Inventory Tracker", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
+            MaterialTrackingPanel trackingPanel = new MaterialTrackingPanel();
+            LoadUserControl(trackingPanel);
         }
 
         private void panelSideMenu_Paint(object sender, PaintEventArgs e) { }
