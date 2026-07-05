@@ -14,10 +14,15 @@ namespace LocalArtisanMarket
     public partial class CustomerDashboard : UserControl
     {
         private List<CartItem> shoppingCart = new List<CartItem>();
-
+         private bool _isCartError = false;
         public CustomerDashboard()
         {
             InitializeComponent();
+
+            btnCheckout.AutoSize = true;
+            btnCheckout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btnCheckout.Padding = new Padding(10, 5, 10, 5);
+
             LoadCatalogToScreen(); 
         }
 
@@ -80,7 +85,7 @@ namespace LocalArtisanMarket
         {
             List<Product> products = GetAvailableProducts();
             flowLayoutPanelCatalog.Controls.Clear();
-
+             
             foreach (Product p in products)
             {
                 ProductCard card = new ProductCard(p);
@@ -93,6 +98,17 @@ namespace LocalArtisanMarket
         {
             var existingItem = shoppingCart.FirstOrDefault(i => i.SelectedProduct.ProductID == itemToAdd.SelectedProduct.ProductID);
 
+ 
+            int currentQtyInCart = existingItem != null ? existingItem.Quantity : 0;
+            int requestedTotalQty = currentQtyInCart + itemToAdd.Quantity;
+
+      
+            if (requestedTotalQty > itemToAdd.SelectedProduct.StockAvailable)
+            {
+                ShowInlineNotification($"Cannot add {itemToAdd.SelectedProduct.Name}. Insufficient stock.", true);
+                return;
+            }
+
             if (existingItem != null)
             {
                 existingItem.Quantity += itemToAdd.Quantity;
@@ -103,11 +119,60 @@ namespace LocalArtisanMarket
             }
 
             UpdateCartGridView();
+            ShowInlineNotification($"{itemToAdd.SelectedProduct.Name} added to cart.", false);
         }
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e) { }
         private void CustomerDashboard_Load(object sender, EventArgs e) { }
         private void dgvCart_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
         private void flowLayoutPanelCatalog_Paint(object sender, PaintEventArgs e) { }
+
+        private void btnCheckout_Click(object sender, EventArgs e)
+        {
+            if (shoppingCart.Count == 0)
+            {
+                _isCartError = true;
+                this.Invalidate(); 
+                ShowInlineNotification("Cart is empty. Please add items to checkout.", true);
+                return;
+            }
+
+            _isCartError = false;
+            this.Invalidate();
+
+           
+            bool success = DatabaseHelper.ProcessCheckoutBatch(shoppingCart);
+
+            if (success)
+            {
+                shoppingCart.Clear(); 
+                UpdateCartGridView(); 
+                ShowInlineNotification("Checkout successful! Thank you.", false);
+                LoadCatalogToScreen(); 
+            }
+            else
+            {
+                ShowInlineNotification("Checkout failed during database transaction.", true);
+            }
+        }
+
+        
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+            if (_isCartError)
+            {
+                
+                Rectangle rect = new Rectangle(dgvCart.Location.X - 2, dgvCart.Location.Y - 2, dgvCart.Width + 4, dgvCart.Height + 4);
+                ControlPaint.DrawBorder(e.Graphics, rect, Color.Red, ButtonBorderStyle.Solid);
+            }
+        }
+
+        private void ShowInlineNotification(string message, bool isError)
+        {
+            lblStatus.Text = message;
+            lblStatus.ForeColor = isError ? Color.Red : Color.Green;
+            lblStatus.Visible = true;
+        }
     }
 }

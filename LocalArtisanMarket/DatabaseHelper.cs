@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
@@ -113,6 +114,62 @@ namespace LocalArtisanMarket
                 new SqlParameter("@Supplier", supplier)
             };
             ExecuteNonQuery(query, parameters);
+        }
+
+        public static bool ProcessCheckoutBatch(List<CartItem> cart)
+        {
+
+            using (System.Data.SqlClient.SqlConnection conn = GetConnection())
+            {
+                conn.Open();
+
+
+                System.Data.SqlClient.SqlTransaction transaction = conn.BeginTransaction();
+
+                using (System.Data.SqlClient.SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.Transaction = transaction;
+
+                    try
+                    {
+                       
+                        cmd.CommandText = "UPDATE Products SET StockQuantity = StockQuantity - @quantity WHERE ProductID = @id AND StockQuantity >= @quantity";
+
+                        cmd.Parameters.Add("@quantity", System.Data.SqlDbType.Int);
+                        cmd.Parameters.Add("@id", System.Data.SqlDbType.Int);
+
+                        foreach (var item in cart)
+                        {
+                            cmd.Parameters["@quantity"].Value = item.Quantity;
+                            cmd.Parameters["@id"].Value = item.SelectedProduct.ProductID;
+
+                            int rowsAffected = cmd.ExecuteNonQuery();
+
+                            if (rowsAffected == 0)
+                            {
+                                transaction.Rollback();
+                                return false;
+                            }
+                        }
+
+                        transaction.Commit();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                        try
+                        {
+                            transaction.Rollback();
+                        }
+                        catch
+                        {
+                            
+                        }
+                        return false;
+                    }
+                }
+            }
         }
     }
 }

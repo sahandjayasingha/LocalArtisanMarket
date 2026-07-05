@@ -15,7 +15,7 @@ namespace LocalArtisanMarket
     {
         private Product _product;
 
-        // This creates a custom event so the main dashboard can listen for clicks
+        
         public event EventHandler<CartItem> OnAddToCart;
         public ProductCard(Product product)
         {
@@ -31,13 +31,13 @@ namespace LocalArtisanMarket
 
         }
 
-        private void ProductCard_Load(object sender, EventArgs e)
+        private void btnAddToCart_Click(object sender, EventArgs e)
         {
             int requestedQty = (int)numQuantity.Value;
 
             if (requestedQty > 0 && requestedQty <= _product.StockAvailable)
             {
-                // Package the selection and fire the event
+                
                 CartItem newItem = new CartItem { SelectedProduct = _product, Quantity = requestedQty };
                 OnAddToCart?.Invoke(this, newItem);
             }
