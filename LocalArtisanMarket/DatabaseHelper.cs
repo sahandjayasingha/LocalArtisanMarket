@@ -89,14 +89,16 @@ namespace LocalArtisanMarket
                                 CraftTechnique NVARCHAR(100),
                                 MoistureMetric DECIMAL(18,2) DEFAULT 0.0,
                                 ProcessingStage NVARCHAR(50) DEFAULT 'Raw',
-                                ImagePath NVARCHAR(MAX) NULL
+                                ImagePath NVARCHAR(MAX) NULL,
+                                StoryText NVARCHAR(MAX) NULL,
+                                StoryImagePath NVARCHAR(MAX) NULL
                             );
 
-                            INSERT INTO Products (ProductName, Price, Description, Stock, OriginHub, CraftTechnique, MoistureMetric, ProcessingStage, ImagePath)
+                            INSERT INTO Products (ProductName, Price, Description, Stock, OriginHub, CraftTechnique, MoistureMetric, ProcessingStage, ImagePath, StoryText, StoryImagePath)
                             VALUES 
-                            ('Molagoda Traditional Clay Pot', 15.50, 'Authentic Sri Lankan clay pot', 10, 'Molagoda Hub', 'Pottery', 12.50, 'Baked', ''),
-                            ('Radawadunna Cane Basket', 25.00, 'Handcrafted durable cane basket', 5, 'Radawadunna Hub', 'Weaving', 8.20, 'Ready', ''),
-                            ('Handwoven Dumbara Mat', 35.00, 'Traditional design Dumbara mat', 8, 'Kandy Hub', 'Handloom', 5.00, 'Raw', '');
+                            ('Molagoda Traditional Clay Pot', 15.50, 'Authentic Sri Lankan clay pot', 10, 'Molagoda Hub', 'Pottery', 12.50, 'Baked', '', 'Shaped entirely by hand on a traditional potter wheel, sun-dried, and kiln-baked at precise temperatures.', ''),
+                            ('Radawadunna Cane Basket', 25.00, 'Handcrafted durable cane basket', 5, 'Radawadunna Hub', 'Weaving', 8.20, 'Ready', '', 'The indigenous cane is carefully selected, boiled to prevent splitting, shaved into fine splints.', ''),
+                            ('Handwoven Dumbara Mat', 35.00, 'Traditional design Dumbara mat', 8, 'Kandy Hub', 'Handloom', 5.00, 'Raw', '', 'Woven on a traditional wooden handloom, this Dumbara pattern carries centuries of family heritage.', '');
                         END;";
 
                     using (SqlCommand cmd = new SqlCommand(tablesQuery, conn))
@@ -158,10 +160,9 @@ namespace LocalArtisanMarket
                         {
                             conn.Open();
                             da.Fill(dt);
-
-                            if (dt.Rows.Count > 0) return dt;
+                            return dt;
                         }
-                        catch (Exception ex)
+                        catch
                         {
                         }
                     }
@@ -205,7 +206,7 @@ namespace LocalArtisanMarket
                         conn.Open();
                         return cmd.ExecuteNonQuery();
                     }
-                    catch (Exception ex)
+                    catch
                     {
                     }
                 }

@@ -19,11 +19,14 @@ namespace LocalArtisanMarket
         public ProductCard()
         {
             InitializeComponent();
+            if (pictureBox1 != null) pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
         }
 
         public ProductCard(ProductDTO product)
         {
             InitializeComponent();
+            if (pictureBox1 != null) pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+
             _product = product;
 
             lblTitle.Text = product.ProductName;
@@ -57,7 +60,6 @@ namespace LocalArtisanMarket
             }
         }
 
-        
         public int GetSelectedQuantity()
         {
             return (int)numQuantity.Value;
@@ -65,7 +67,13 @@ namespace LocalArtisanMarket
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-
+            if (_product != null)
+            {
+                using (CraftStoryForm storyForm = new CraftStoryForm(_product))
+                {
+                    storyForm.ShowDialog();
+                }
+            }
         }
 
         private void btnAddToCart_Click(object sender, EventArgs e)
