@@ -17,6 +17,7 @@ namespace LocalArtisanMarket
 
         private void Main_Load(object sender, EventArgs e)
         {
+            DatabaseHelper.InitializeDatabase();
             ConfigureNavigation(null);
             ShowWelcomePanel();
         }
