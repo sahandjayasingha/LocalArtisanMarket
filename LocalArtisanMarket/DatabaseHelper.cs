@@ -161,7 +161,7 @@ namespace LocalArtisanMarket
 
                             if (dt.Rows.Count > 0) return dt;
                         }
-                        catch
+                        catch (Exception ex)
                         {
                         }
                     }
@@ -205,7 +205,7 @@ namespace LocalArtisanMarket
                         conn.Open();
                         return cmd.ExecuteNonQuery();
                     }
-                    catch
+                    catch (Exception ex)
                     {
                     }
                 }
