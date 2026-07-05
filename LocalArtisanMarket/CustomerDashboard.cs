@@ -53,17 +53,17 @@ namespace LocalArtisanMarket
 
         private void UpdateCartGridView()
         {
-            // 1. THE NUKE: Erase the data AND completely destroy any ghost columns
+          
             dgvCart.DataSource = null;
-            dgvCart.Columns.Clear(); // <--- This wipes out those empty blank columns!
+            dgvCart.Columns.Clear(); 
 
-            // 2. Bind the fresh data
+        
             dgvCart.DataSource = shoppingCart.ToList();
 
-            // 3. Hide the default grey row-selector column
+
             dgvCart.RowHeadersVisible = false;
 
-            // 4. Hide the raw underlying data object
+           
             if (dgvCart.Columns["SelectedProduct"] != null)
             {
                 dgvCart.Columns["SelectedProduct"].Visible = false;
@@ -194,10 +194,10 @@ namespace LocalArtisanMarket
             lblStatus.Visible = true;
         }
 
-        // This is the correct, single version of the click event!
+   
         private void dgvCart_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            // Make sure they clicked a valid row AND they clicked our specific Remove button
+            
             if (e.RowIndex >= 0 && dgvCart.Columns[e.ColumnIndex].Name == "RemoveBtn")
             {
                 string itemName = shoppingCart[e.RowIndex].Name;
