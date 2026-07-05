@@ -62,9 +62,9 @@
             this.lblTotal.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTotal.Location = new System.Drawing.Point(1108, 510);
             this.lblTotal.Name = "lblTotal";
-            this.lblTotal.Size = new System.Drawing.Size(128, 25);
+            this.lblTotal.Size = new System.Drawing.Size(147, 25);
             this.lblTotal.TabIndex = 2;
-            this.lblTotal.Text = "Total: $0.00";
+            this.lblTotal.Text = "Total: Rs 0.00";
             // 
             // btnCheckout
             // 
