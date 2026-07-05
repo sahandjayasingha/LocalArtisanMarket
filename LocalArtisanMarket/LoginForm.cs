@@ -100,7 +100,7 @@ namespace LocalArtisanMarket
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    string query = "SELECT UserID, Role FROM Users WHERE Email = @Email AND PasswordHash = @Password";
+                    string query = "SELECT UserID, Role FROM Users WHERE Email = @Email AND Password = @Password";
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@Email", email);
@@ -176,7 +176,7 @@ namespace LocalArtisanMarket
                         }
                     }
 
-                    string insertQuery = "INSERT INTO Users (Email, PasswordHash, Role, FullName) VALUES (@Email, @Password, @Role, @FullName)";
+                    string insertQuery = "INSERT INTO Users (Email, Password, Role, FullName) VALUES (@Email, @Password, @Role, @FullName)";
                     using (SqlCommand insertCmd = new SqlCommand(insertQuery, conn))
                     {
                         insertCmd.Parameters.AddWithValue("@Email", email);
