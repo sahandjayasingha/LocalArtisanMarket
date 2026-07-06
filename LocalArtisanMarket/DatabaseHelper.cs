@@ -38,10 +38,12 @@ namespace LocalArtisanMarket
                                 createCmd.ExecuteNonQuery();
                             }
                             System.Threading.Thread.Sleep(2000);
-                            CreateSchemaAndDefaultData();
                         }
                     }
                 }
+
+                
+                CreateSchemaAndDefaultData();
             }
             catch
             {
@@ -85,7 +87,7 @@ namespace LocalArtisanMarket
                                 ProductName NVARCHAR(150),
                                 Price DECIMAL(18,2),
                                 Description NVARCHAR(MAX),
-                                Stock INT,
+                                StockQuantity INT, 
                                 OriginHub NVARCHAR(100),
                                 CraftTechnique NVARCHAR(100),
                                 MoistureMetric DECIMAL(18,2) DEFAULT 0.0,
@@ -95,7 +97,7 @@ namespace LocalArtisanMarket
                                 StoryImagePath NVARCHAR(MAX) NULL
                             );
 
-                            INSERT INTO Products (ProductName, Price, Description, Stock, OriginHub, CraftTechnique, MoistureMetric, ProcessingStage, ImagePath, StoryText, StoryImagePath)
+                            INSERT INTO Products (ProductName, Price, Description, StockQuantity, OriginHub, CraftTechnique, MoistureMetric, ProcessingStage, ImagePath, StoryText, StoryImagePath)
                             VALUES 
                             ('Molagoda Traditional Clay Pot', 15.50, 'Authentic Sri Lankan clay pot', 10, 'Molagoda Hub', 'Pottery', 12.50, 'Baked', '', 'Shaped entirely by hand on a traditional potter wheel, sun-dried, and kiln-baked at precise temperatures.', ''),
                             ('Radawadunna Cane Basket', 25.00, 'Handcrafted durable cane basket', 5, 'Radawadunna Hub', 'Weaving', 8.20, 'Ready', '', 'The indigenous cane is carefully selected, boiled to prevent splitting, shaved into fine splints.', ''),
@@ -338,7 +340,7 @@ namespace LocalArtisanMarket
             ExecuteNonQuery(query, parameters);
         }
 
-        public static bool ProcessCheckoutBatch(List<CartItem> cart)
+        public static string ProcessCheckoutBatch(List<CartItem> cart)
         {
             using (SqlConnection conn = GetConnection())
             {
@@ -351,37 +353,104 @@ namespace LocalArtisanMarket
                         cmd.Transaction = transaction;
                         try
                         {
-                            cmd.CommandText = "UPDATE Products SET StockQuantity = StockQuantity - @quantity WHERE ProductID = @id AND StockQuantity >= @quantity";
+                            
+                            cmd.CommandText = "SELECT ISNULL(MAX(OrderID), 0) + 1 FROM Orders";
+                            int nextId = Convert.ToInt32(cmd.ExecuteScalar());
+
+
+                            string orderToken = "OD-#" + nextId.ToString("D4");
+
+                            
+                            decimal totalAmount = 0;
+                            foreach (var item in cart) { totalAmount += item.TotalPrice; }
+
+                   
+                            cmd.CommandText = "INSERT INTO Orders (OrderToken, OrderDate, TotalAmount) OUTPUT INSERTED.OrderID VALUES (@token, GETDATE(), @total)";
+                            cmd.Parameters.AddWithValue("@token", orderToken);
+                            cmd.Parameters.AddWithValue("@total", totalAmount);
+
+                            int newOrderId = (int)cmd.ExecuteScalar();
+
+                            cmd.Parameters.Clear();
+                            cmd.CommandText = "UPDATE Products SET StockQuantity = StockQuantity - @quantity WHERE ProductID = @id AND StockQuantity >= @quantity; " +
+                                              "INSERT INTO OrderItems (OrderID, ProductID, Quantity, PriceAtPurchase) VALUES (@orderId, @id, @quantity, @price);";
+
                             cmd.Parameters.Add("@quantity", SqlDbType.Int);
                             cmd.Parameters.Add("@id", SqlDbType.Int);
+                            cmd.Parameters.Add("@orderId", SqlDbType.Int);
+                            cmd.Parameters.Add("@price", SqlDbType.Decimal);
 
                             foreach (var item in cart)
                             {
                                 cmd.Parameters["@quantity"].Value = item.Quantity;
                                 cmd.Parameters["@id"].Value = item.SelectedProduct.ProductID;
+                                cmd.Parameters["@orderId"].Value = newOrderId;
+                                cmd.Parameters["@price"].Value = item.SelectedProduct.Price;
 
                                 int rowsAffected = cmd.ExecuteNonQuery();
                                 if (rowsAffected == 0)
                                 {
                                     transaction.Rollback();
-                                    return false;
+                                    return null;
                                 }
                             }
                             transaction.Commit();
-                            return true;
+                            return orderToken;
                         }
                         catch
                         {
                             try { transaction.Rollback(); } catch { }
-                            return false;
+                            return null;
                         }
                     }
                 }
                 catch
                 {
-                    return true;
+                     
+                    return "OD-OFFLINE-" + new Random().Next(1000, 9999).ToString();
                 }
             }
+        }
+
+       
+        public static bool DeleteOrder(string orderToken)
+        {
+            using (SqlConnection conn = GetConnection())
+            {
+                try
+                {
+                    conn.Open();
+                    
+                    string query = "DELETE FROM Orders WHERE OrderToken = @token";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@token", orderToken);
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        return rowsAffected > 0; 
+                    }
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+        }
+
+        public static DataTable GetArtisanOrders()
+        {
+            string query = @"
+            SELECT 
+                o.OrderToken AS [Token Number],
+                o.OrderDate AS [Order Date],
+                p.ProductName AS [Product Name],
+                oi.Quantity AS [Qty Sold],
+                (oi.Quantity * oi.PriceAtPurchase) AS [Subtotal]
+            FROM Orders o
+            INNER JOIN OrderItems oi ON o.OrderID = oi.OrderID
+            INNER JOIN Products p ON oi.ProductID = p.ProductID
+            ORDER BY o.OrderDate DESC";
+
+            return ExecuteQuery(query);
         }
     }
 }

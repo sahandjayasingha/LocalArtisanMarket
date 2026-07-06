@@ -29,6 +29,7 @@ namespace LocalArtisanMarket
         private void InitializeComponent()
         {
             this.panelSideMenu = new System.Windows.Forms.Panel();
+            this.btnMyOrders = new System.Windows.Forms.Button();
             this.btnlogin = new System.Windows.Forms.Button();
             this.btnInventory = new System.Windows.Forms.Button();
             this.btnproducts = new System.Windows.Forms.Button();
@@ -42,6 +43,7 @@ namespace LocalArtisanMarket
             // panelSideMenu
             // 
             this.panelSideMenu.BackColor = System.Drawing.Color.DarkGray;
+            this.panelSideMenu.Controls.Add(this.btnMyOrders);
             this.panelSideMenu.Controls.Add(this.btnlogin);
             this.panelSideMenu.Controls.Add(this.btnInventory);
             this.panelSideMenu.Controls.Add(this.btnproducts);
@@ -53,6 +55,16 @@ namespace LocalArtisanMarket
             this.panelSideMenu.Size = new System.Drawing.Size(267, 554);
             this.panelSideMenu.TabIndex = 0;
             this.panelSideMenu.Paint += new System.Windows.Forms.PaintEventHandler(this.panelSideMenu_Paint);
+            // 
+            // btnMyOrders
+            // 
+            this.btnMyOrders.Location = new System.Drawing.Point(5, 321);
+            this.btnMyOrders.Name = "btnMyOrders";
+            this.btnMyOrders.Size = new System.Drawing.Size(257, 56);
+            this.btnMyOrders.TabIndex = 4;
+            this.btnMyOrders.Text = "My Orders";
+            this.btnMyOrders.UseVisualStyleBackColor = true;
+            this.btnMyOrders.Click += new System.EventHandler(this.btnMyOrders_Click);
             // 
             // btnlogin
             // 
@@ -148,5 +160,6 @@ namespace LocalArtisanMarket
         public System.Windows.Forms.Button btnlogin;
         public System.Windows.Forms.Button btnInventory;
         public System.Windows.Forms.Button btnproducts;
+        private System.Windows.Forms.Button btnMyOrders;
     }
 }

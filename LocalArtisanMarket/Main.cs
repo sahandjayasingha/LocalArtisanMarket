@@ -38,6 +38,7 @@ namespace LocalArtisanMarket
             childForm.BringToFront();
         }
 
+
         public void LoadUserControl(UserControl userControl)
         {
             if (this.panelContent == null || userControl == null) return;
@@ -57,6 +58,10 @@ namespace LocalArtisanMarket
                 btnproducts.Text = "Browse Products";
                 btnproducts.Visible = true;
                 btnInventory.Visible = false;
+
+        
+                if (btnMyOrders != null) btnMyOrders.Visible = false;
+
                 ShowWelcomePanel();
             }
             else if (currentRole == "Artisan")
@@ -66,6 +71,9 @@ namespace LocalArtisanMarket
                 btnproducts.Visible = true;
                 btnInventory.Text = "Inventory Tracker";
                 btnInventory.Visible = true;
+
+            
+                if (btnMyOrders != null) btnMyOrders.Visible = true;
             }
             else if (currentRole == "Customer")
             {
@@ -73,6 +81,9 @@ namespace LocalArtisanMarket
                 btnproducts.Text = "Marketplace";
                 btnproducts.Visible = true;
                 btnInventory.Visible = false;
+
+                
+                if (btnMyOrders != null) btnMyOrders.Visible = false;
             }
         }
 
@@ -152,5 +163,11 @@ namespace LocalArtisanMarket
 
         private void panelSideMenu_Paint(object sender, PaintEventArgs e) { }
         private void panelContent_Paint(object sender, PaintEventArgs e) { }
+
+        private void btnMyOrders_Click(object sender, EventArgs e)
+        {
+            MyOrdersPanel ordersView = new MyOrdersPanel();
+            LoadUserControl(ordersView);
+        }
     }
 }
