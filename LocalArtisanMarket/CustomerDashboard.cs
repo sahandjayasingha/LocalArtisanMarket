@@ -53,17 +53,12 @@ namespace LocalArtisanMarket
 
         private void UpdateCartGridView()
         {
-          
             dgvCart.DataSource = null;
-            dgvCart.Columns.Clear(); 
+            dgvCart.Columns.Clear();
 
-        
             dgvCart.DataSource = shoppingCart.ToList();
-
-
             dgvCart.RowHeadersVisible = false;
 
-           
             if (dgvCart.Columns["SelectedProduct"] != null)
             {
                 dgvCart.Columns["SelectedProduct"].Visible = false;
@@ -78,35 +73,32 @@ namespace LocalArtisanMarket
             removeBtn.FlatStyle = FlatStyle.Flat;
             dgvCart.Columns.Add(removeBtn);
 
-
-
             if (dgvCart.Columns["Name"] != null)
             {
                 dgvCart.Columns["Name"].HeaderText = "Name";
                 dgvCart.Columns["Name"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                dgvCart.Columns["Name"].DisplayIndex = 0; 
+                dgvCart.Columns["Name"].DisplayIndex = 0;
             }
 
             if (dgvCart.Columns["Quantity"] != null)
             {
                 dgvCart.Columns["Quantity"].HeaderText = "Qty";
                 dgvCart.Columns["Quantity"].Width = 50;
-                dgvCart.Columns["Quantity"].DisplayIndex = 1; 
+                dgvCart.Columns["Quantity"].DisplayIndex = 1;
             }
 
             if (dgvCart.Columns["TotalPrice"] != null)
             {
                 dgvCart.Columns["TotalPrice"].HeaderText = "Price";
                 dgvCart.Columns["TotalPrice"].DefaultCellStyle.Format = "N2";
-                dgvCart.Columns["TotalPrice"].DisplayIndex = 2; 
+                dgvCart.Columns["TotalPrice"].DisplayIndex = 2;
             }
 
             if (dgvCart.Columns["RemoveBtn"] != null)
             {
-                dgvCart.Columns["RemoveBtn"].DisplayIndex = 3; 
+                dgvCart.Columns["RemoveBtn"].DisplayIndex = 3;
             }
 
-           
             decimal grandTotal = 0;
             foreach (var item in shoppingCart)
             {
@@ -115,6 +107,7 @@ namespace LocalArtisanMarket
 
             lblTotal.Text = "Total: Rs " + grandTotal.ToString("0.00");
         }
+
         private void Card_OnAddToCart(object sender, ProductDTO itemToAdd)
         {
             ProductCard clickedCard = sender as ProductCard;
@@ -149,6 +142,9 @@ namespace LocalArtisanMarket
         private void CustomerDashboard_Load(object sender, EventArgs e) { }
         private void flowLayoutPanelCatalog_Paint(object sender, PaintEventArgs e) { }
 
+        // ==============================================================
+        // THIS IS THE METHOD THAT WAS MODIFIED TO HANDLE TOKENS
+        // ==============================================================
         private void btnCheckout_Click(object sender, EventArgs e)
         {
             if (shoppingCart.Count == 0)
@@ -162,18 +158,22 @@ namespace LocalArtisanMarket
             _isCartError = false;
             this.Invalidate();
 
-            bool success = DatabaseHelper.ProcessCheckoutBatch(shoppingCart);
+            // UPDATED: Now receives a string (the token) instead of a boolean
+            string token = DatabaseHelper.ProcessCheckoutBatch(shoppingCart);
 
-            if (success)
+            if (!string.IsNullOrEmpty(token)) // Check if token was successfully generated
             {
                 shoppingCart.Clear();
                 UpdateCartGridView();
-                ShowInlineNotification("Checkout successful! Thank you.", false);
+
+                // UPDATED: Displays the token to the customer!
+                ShowInlineNotification($"Checkout successful! Your Token: {token}", false);
+
                 LoadCatalogToScreen();
             }
             else
             {
-                ShowInlineNotification("Checkout failed during database transaction.", true);
+                ShowInlineNotification("Checkout failed. Items may be out of stock.", true);
             }
         }
 
@@ -194,10 +194,8 @@ namespace LocalArtisanMarket
             lblStatus.Visible = true;
         }
 
-   
         private void dgvCart_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            
             if (e.RowIndex >= 0 && dgvCart.Columns[e.ColumnIndex].Name == "RemoveBtn")
             {
                 string itemName = shoppingCart[e.RowIndex].Name;

@@ -82,6 +82,12 @@
     <Compile Include="MaterialTrackingPanel.Designer.cs">
       <DependentUpon>MaterialTrackingPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="MyOrdersPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MyOrdersPanel.Designer.cs">
+      <DependentUpon>MyOrdersPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="ProductBusinessLogic.cs" />
     <Compile Include="ProductDTO.cs" />
     <Compile Include="ProductRepository.cs" />
@@ -106,6 +112,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MyOrdersPanel.resx">
+      <DependentUpon>MyOrdersPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ProductCard.resx">
       <DependentUpon>ProductCard.cs</DependentUpon>
