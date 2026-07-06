@@ -12,6 +12,7 @@ namespace LocalArtisanMarket
         private static string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=LocalArtisanMarketDB;Integrated Security=True;Connect Timeout=30;";
 
         private static List<DataTable> _offlineUserSessionTable = new List<DataTable>();
+        public static List<DataTable> OfflineMaterialsTable = new List<DataTable>();
 
         public static SqlConnection GetConnection()
         {
@@ -99,6 +100,25 @@ namespace LocalArtisanMarket
                             ('Molagoda Traditional Clay Pot', 15.50, 'Authentic Sri Lankan clay pot', 10, 'Molagoda Hub', 'Pottery', 12.50, 'Baked', '', 'Shaped entirely by hand on a traditional potter wheel, sun-dried, and kiln-baked at precise temperatures.', ''),
                             ('Radawadunna Cane Basket', 25.00, 'Handcrafted durable cane basket', 5, 'Radawadunna Hub', 'Weaving', 8.20, 'Ready', '', 'The indigenous cane is carefully selected, boiled to prevent splitting, shaved into fine splints.', ''),
                             ('Handwoven Dumbara Mat', 35.00, 'Traditional design Dumbara mat', 8, 'Kandy Hub', 'Handloom', 5.00, 'Raw', '', 'Woven on a traditional wooden handloom, this Dumbara pattern carries centuries of family heritage.', '');
+                        END;
+
+                        IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'RawMaterials')
+                        BEGIN
+                            CREATE TABLE RawMaterials (
+                                MaterialID INT IDENTITY(1,1) PRIMARY KEY,
+                                MaterialName NVARCHAR(150),
+                                StockQuantity DECIMAL(18,2),
+                                Unit NVARCHAR(50),
+                                ProcessingStage NVARCHAR(100),
+                                SupplierInfo NVARCHAR(250),
+                                DamageWaste DECIMAL(18,2) DEFAULT 0.0
+                            );
+
+                            INSERT INTO RawMaterials (MaterialName, StockQuantity, Unit, ProcessingStage, SupplierInfo, DamageWaste)
+                            VALUES 
+                            ('Raw Clay (Premium)', 500.00, 'Kilograms', 'Clay Moisture Logging', 'Molagoda Sourcing Hub', 15.50),
+                            ('Processed Rattan Coils', 45.00, 'Bundles', 'Soaking & Bleaching', 'Radawadunna Forest Depot', 2.00),
+                            ('Natural Organic Eco-Dyes', 12.50, 'Liters', 'Boiling & Extraction', 'Kandy Heritage Village', 0.50);
                         END;";
 
                     using (SqlCommand cmd = new SqlCommand(tablesQuery, conn))
@@ -130,6 +150,24 @@ namespace LocalArtisanMarket
                 dt.Rows.Add(2, "customer@gmail.com", "123", "123", "Customer", "Customer", "Default Customer");
 
                 _offlineUserSessionTable.Add(dt);
+            }
+
+            if (OfflineMaterialsTable.Count == 0)
+            {
+                DataTable dtMat = new DataTable();
+                dtMat.Columns.Add("MaterialID", typeof(int));
+                dtMat.Columns.Add("MaterialName", typeof(string));
+                dtMat.Columns.Add("StockQuantity", typeof(decimal));
+                dtMat.Columns.Add("Unit", typeof(string));
+                dtMat.Columns.Add("ProcessingStage", typeof(string));
+                dtMat.Columns.Add("SupplierInfo", typeof(string));
+                dtMat.Columns.Add("DamageWaste", typeof(decimal));
+
+                dtMat.Rows.Add(1, "Raw Clay (Premium)", 500.00m, "Kilograms", "Clay Moisture Logging", "Molagoda Sourcing Hub", 15.50m);
+                dtMat.Rows.Add(2, "Processed Rattan Coils", 45.00m, "Bundles", "Soaking & Bleaching", "Radawadunna Forest Depot", 2.00m);
+                dtMat.Rows.Add(3, "Natural Organic Eco-Dyes", 12.50m, "Liters", "Boiling & Extraction", "Kandy Heritage Village", 0.50m);
+
+                OfflineMaterialsTable.Add(dtMat);
             }
         }
 
@@ -164,6 +202,10 @@ namespace LocalArtisanMarket
                         }
                         catch
                         {
+                            if (query.Contains("RawMaterials"))
+                            {
+                                return OfflineMaterialsTable[0];
+                            }
                         }
                     }
                 }
@@ -237,6 +279,42 @@ namespace LocalArtisanMarket
                     }
 
                     fallback.Rows.Add(newRow);
+                    return 1;
+                }
+                catch
+                {
+                    return -1;
+                }
+            }
+
+            if (query.StartsWith("UPDATE RawMaterials", StringComparison.OrdinalIgnoreCase) && parameters != null)
+            {
+                try
+                {
+                    DataTable dtMat = OfflineMaterialsTable[0];
+                    int mId = 0;
+                    decimal qty = 0;
+                    string stage = "";
+                    string supplier = "";
+
+                    foreach (var p in parameters)
+                    {
+                        if (p.ParameterName.Equals("@id")) mId = Convert.ToInt32(p.Value);
+                        if (p.ParameterName.Equals("@qty")) qty = Convert.ToDecimal(p.Value);
+                        if (p.ParameterName.Equals("@stage")) stage = p.Value.ToString();
+                        if (p.ParameterName.Equals("@supplier")) supplier = p.Value.ToString();
+                    }
+
+                    foreach (DataRow row in dtMat.Rows)
+                    {
+                        if (Convert.ToInt32(row["MaterialID"]) == mId)
+                        {
+                            row["StockQuantity"] = qty;
+                            row["ProcessingStage"] = stage;
+                            row["SupplierInfo"] = supplier;
+                            break;
+                        }
+                    }
                     return 1;
                 }
                 catch
