@@ -65,6 +65,7 @@ namespace LocalArtisanMarket
             txtTechniqueStory = new TextBox();
             txtTechniqueStory.Multiline = true;
             txtTechniqueStory.ReadOnly = true;
+            txtTechniqueStory.TabStop = false;
             txtTechniqueStory.BackColor = Color.FromArgb(252, 250, 245);
             txtTechniqueStory.Font = new Font("Segoe UI", 10);
             txtTechniqueStory.Location = new Point(25, 285);

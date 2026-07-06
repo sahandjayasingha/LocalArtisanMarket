@@ -20,6 +20,36 @@ namespace LocalArtisanMarket
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
+                    string query = "SELECT ProductID, ProductName, Price, Description, Stock, OriginHub, CraftTechnique, MoistureMetric, ProcessingStage, ImagePath, StoryText, StoryImagePath FROM Products";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        conn.Open();
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                products.Add(new ProductDTO(
+                                    Convert.ToInt32(reader["ProductID"]),
+                                    reader["ProductName"]?.ToString(),
+                                    Convert.ToDecimal(reader["Price"]),
+                                    reader["Description"]?.ToString(),
+                                    Convert.ToInt32(reader["Stock"]),
+                                    reader["OriginHub"]?.ToString(),
+                                    reader["CraftTechnique"]?.ToString(),
+                                    Convert.ToDecimal(reader["MoistureMetric"]),
+                                    reader["ProcessingStage"]?.ToString(),
+                                    reader["ImagePath"]?.ToString(),
+                                    reader["StoryText"]?.ToString(),
+                                    reader["StoryImagePath"]?.ToString()
+                                ));
+                            }
+                        }
+                    }
+                }
+                return products;
+            }
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
                     // FIXED: Changed 'Stock' to 'StockQuantity AS Stock' 
                     string query = "SELECT ProductID, ProductName, Price, Description, StockQuantity AS Stock, OriginHub, CraftTechnique, MoistureMetric, ProcessingStage, ImagePath, StoryText, StoryImagePath FROM Products";
                     using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -63,6 +93,29 @@ namespace LocalArtisanMarket
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
+                    string query = "INSERT INTO Products (ProductName, Price, Description, Stock, OriginHub, CraftTechnique, MoistureMetric, ProcessingStage, ImagePath, StoryText, StoryImagePath) " +
+                                   "VALUES (@Name, @Price, @Desc, @Stock, @Origin, @Technique, @Moisture, @Stage, @Img, @StoryTxt, @StoryImg)";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Name", product.ProductName);
+                        cmd.Parameters.AddWithValue("@Price", product.Price);
+                        cmd.Parameters.AddWithValue("@Desc", product.Description);
+                        cmd.Parameters.AddWithValue("@Stock", product.Stock);
+                        cmd.Parameters.AddWithValue("@Origin", product.OriginHub);
+                        cmd.Parameters.AddWithValue("@Technique", product.CraftTechnique);
+                        cmd.Parameters.AddWithValue("@Moisture", product.MoistureMetric);
+                        cmd.Parameters.AddWithValue("@Stage", product.ProcessingStage);
+                        cmd.Parameters.AddWithValue("@Img", product.ImagePath ?? "");
+                        cmd.Parameters.AddWithValue("@StoryTxt", product.StoryText ?? "");
+                        cmd.Parameters.AddWithValue("@StoryImg", product.StoryImagePath ?? "");
+
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
                     // FIXED: Changed 'Stock' to 'StockQuantity' in the INSERT statement
                     string query = "INSERT INTO Products (ProductName, Price, Description, StockQuantity, OriginHub, CraftTechnique, MoistureMetric, ProcessingStage, ImagePath, StoryText, StoryImagePath) " +
                                    "VALUES (@Name, @Price, @Desc, @Stock, @Origin, @Technique, @Moisture, @Stage, @Img, @StoryTxt, @StoryImg)";
@@ -101,6 +154,30 @@ namespace LocalArtisanMarket
 
             try
             {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    string query = "UPDATE Products SET ProductName = @Name, Price = @Price, Description = @Desc, Stock = @Stock, " +
+                                   "OriginHub = @Origin, CraftTechnique = @Technique, MoistureMetric = @Moisture, ProcessingStage = @Stage, " +
+                                   "ImagePath = @Img, StoryText = @StoryTxt, StoryImagePath = @StoryImg WHERE ProductID = @Id";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Id", product.ProductID);
+                        cmd.Parameters.AddWithValue("@Name", product.ProductName);
+                        cmd.Parameters.AddWithValue("@Price", product.Price);
+                        cmd.Parameters.AddWithValue("@Desc", product.Description);
+                        cmd.Parameters.AddWithValue("@Stock", product.Stock);
+                        cmd.Parameters.AddWithValue("@Origin", product.OriginHub);
+                        cmd.Parameters.AddWithValue("@Technique", product.CraftTechnique);
+                        cmd.Parameters.AddWithValue("@Moisture", product.MoistureMetric);
+                        cmd.Parameters.AddWithValue("@Stage", product.ProcessingStage);
+                        cmd.Parameters.AddWithValue("@Img", product.ImagePath ?? "");
+                        cmd.Parameters.AddWithValue("@StoryTxt", product.StoryText ?? "");
+                        cmd.Parameters.AddWithValue("@StoryImg", product.StoryImagePath ?? "");
+
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                    }
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     // FIXED: Changed 'Stock' to 'StockQuantity' in the UPDATE statement

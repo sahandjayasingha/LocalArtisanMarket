@@ -10,7 +10,7 @@ namespace LocalArtisanMarket
     {
         private Main _mainForm;
 
-        private string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=LocalArtisanMarketDb;Integrated Security=True";
+        private string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=LocalArtisanMarketDB;Integrated Security=True;Connect Timeout=30;";
 
         public static string CurrentUserID { get; private set; } = null;
         public static string CurrentUserRole { get; private set; } = null;
@@ -100,7 +100,7 @@ namespace LocalArtisanMarket
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    string query = "SELECT UserID, Role FROM Users WHERE Email = @Email AND PasswordHash = @Password";
+                    string query = "SELECT UserID, Role FROM Users WHERE Email = @Email AND Password = @Password";
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@Email", email);
@@ -131,19 +131,9 @@ namespace LocalArtisanMarket
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show("Database connection unavailable. Logging in via local profile simulation.", "Notice", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                CurrentUserID = "1";
-                CurrentUserRole = email.StartsWith("customer", StringComparison.OrdinalIgnoreCase) ? "Customer" : "Artisan";
-
-                if (_mainForm != null)
-                {
-                    _mainForm.ConfigureNavigation(CurrentUserRole);
-                }
-
-                this.Close();
+                MessageBox.Show("Database connection error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -186,7 +176,7 @@ namespace LocalArtisanMarket
                         }
                     }
 
-                    string insertQuery = "INSERT INTO Users (Email, PasswordHash, Role, FullName) VALUES (@Email, @Password, @Role, @FullName)";
+                    string insertQuery = "INSERT INTO Users (Email, Password, Role, FullName) VALUES (@Email, @Password, @Role, @FullName)";
                     using (SqlCommand insertCmd = new SqlCommand(insertQuery, conn))
                     {
                         insertCmd.Parameters.AddWithValue("@Email", email);
@@ -212,10 +202,9 @@ namespace LocalArtisanMarket
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show("Database offline. Registration Simulated Successfully for local profile!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                SwitchUI(false);
+                MessageBox.Show("Database registration error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
