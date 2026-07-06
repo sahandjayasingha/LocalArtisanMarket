@@ -20,7 +20,7 @@ namespace LocalArtisanMarket
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    string query = "SELECT ProductID, ProductName, Price, Description, Stock, OriginHub, CraftTechnique, MoistureMetric, ProcessingStage, ImagePath, StoryText, StoryImagePath FROM Products";
+                    string query = "SELECT ProductID, ProductName, Price, Description, StockQuantity AS Stock, OriginHub, CraftTechnique, MoistureMetric, ProcessingStage, ImagePath, StoryText, StoryImagePath FROM Products";
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         conn.Open();
@@ -62,7 +62,7 @@ namespace LocalArtisanMarket
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    string query = "INSERT INTO Products (ProductName, Price, Description, Stock, OriginHub, CraftTechnique, MoistureMetric, ProcessingStage, ImagePath, StoryText, StoryImagePath) " +
+                    string query = "INSERT INTO Products (ProductName, Price, Description, StockQuantity, OriginHub, CraftTechnique, MoistureMetric, ProcessingStage, ImagePath, StoryText, StoryImagePath) " +
                                    "VALUES (@Name, @Price, @Desc, @Stock, @Origin, @Technique, @Moisture, @Stage, @Img, @StoryTxt, @StoryImg)";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -101,7 +101,7 @@ namespace LocalArtisanMarket
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    string query = "UPDATE Products SET ProductName = @Name, Price = @Price, Description = @Desc, Stock = @Stock, " +
+                    string query = "UPDATE Products SET ProductName = @Name, Price = @Price, Description = @Desc, StockQuantity = @Stock, " +
                                    "OriginHub = @Origin, CraftTechnique = @Technique, MoistureMetric = @Moisture, ProcessingStage = @Stage, " +
                                    "ImagePath = @Img, StoryText = @StoryTxt, StoryImagePath = @StoryImg WHERE ProductID = @Id";
 

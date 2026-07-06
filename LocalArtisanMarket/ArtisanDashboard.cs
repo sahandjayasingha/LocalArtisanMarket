@@ -20,7 +20,7 @@ namespace LocalArtisanMarket
         private TextBox txtStoryImagePath;
         private Button btnBrowseStoryImage;
 
-        public static string ConnectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=LocalArtisanMarketDB;Integrated Security=True;Connect Timeout=30;";
+        public static string ConnectionString = @"Data Source=(Localdb)\MSSQLLocalDB;Initial Catalog=LocalArtisanMarketDb;Integrated Security=True;Connect Timeout=30;";
 
         public ArtisanDashboard()
         {
