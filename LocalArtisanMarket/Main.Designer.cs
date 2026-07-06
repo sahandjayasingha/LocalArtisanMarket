@@ -50,9 +50,9 @@ namespace LocalArtisanMarket
             this.panelSideMenu.Controls.Add(this.btnhome);
             this.panelSideMenu.Dock = System.Windows.Forms.DockStyle.Left;
             this.panelSideMenu.Location = new System.Drawing.Point(0, 0);
-            this.panelSideMenu.Margin = new System.Windows.Forms.Padding(5);
+            this.panelSideMenu.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.panelSideMenu.Name = "panelSideMenu";
-            this.panelSideMenu.Size = new System.Drawing.Size(267, 643);
+            this.panelSideMenu.Size = new System.Drawing.Size(267, 554);
             this.panelSideMenu.TabIndex = 0;
             this.panelSideMenu.Paint += new System.Windows.Forms.PaintEventHandler(this.panelSideMenu_Paint);
             // 
@@ -68,8 +68,8 @@ namespace LocalArtisanMarket
             // 
             // btnlogin
             // 
-            this.btnlogin.Location = new System.Drawing.Point(5, 413);
-            this.btnlogin.Margin = new System.Windows.Forms.Padding(5);
+            this.btnlogin.Location = new System.Drawing.Point(5, 373);
+            this.btnlogin.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.btnlogin.Name = "btnlogin";
             this.btnlogin.Size = new System.Drawing.Size(259, 55);
             this.btnlogin.TabIndex = 3;
@@ -79,8 +79,8 @@ namespace LocalArtisanMarket
             // 
             // btnInventory
             // 
-            this.btnInventory.Location = new System.Drawing.Point(3, 235);
-            this.btnInventory.Margin = new System.Windows.Forms.Padding(5);
+            this.btnInventory.Location = new System.Drawing.Point(5, 274);
+            this.btnInventory.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.btnInventory.Name = "btnInventory";
             this.btnInventory.Size = new System.Drawing.Size(259, 55);
             this.btnInventory.TabIndex = 2;
@@ -90,8 +90,8 @@ namespace LocalArtisanMarket
             // 
             // btnproducts
             // 
-            this.btnproducts.Location = new System.Drawing.Point(3, 139);
-            this.btnproducts.Margin = new System.Windows.Forms.Padding(5);
+            this.btnproducts.Location = new System.Drawing.Point(5, 177);
+            this.btnproducts.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.btnproducts.Name = "btnproducts";
             this.btnproducts.Size = new System.Drawing.Size(259, 55);
             this.btnproducts.TabIndex = 1;
@@ -103,8 +103,8 @@ namespace LocalArtisanMarket
             // 
             this.btnhome.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnhome.ForeColor = System.Drawing.Color.White;
-            this.btnhome.Location = new System.Drawing.Point(3, 40);
-            this.btnhome.Margin = new System.Windows.Forms.Padding(5);
+            this.btnhome.Location = new System.Drawing.Point(5, 76);
+            this.btnhome.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.btnhome.Name = "btnhome";
             this.btnhome.Size = new System.Drawing.Size(259, 55);
             this.btnhome.TabIndex = 0;
@@ -118,9 +118,9 @@ namespace LocalArtisanMarket
             this.panelContent.Controls.Add(this.mainWorkspacePanel);
             this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelContent.Location = new System.Drawing.Point(267, 0);
-            this.panelContent.Margin = new System.Windows.Forms.Padding(5);
+            this.panelContent.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.panelContent.Name = "panelContent";
-            this.panelContent.Size = new System.Drawing.Size(1104, 643);
+            this.panelContent.Size = new System.Drawing.Size(1104, 554);
             this.panelContent.TabIndex = 1;
             // 
             // mainWorkspacePanel
@@ -129,17 +129,17 @@ namespace LocalArtisanMarket
             this.mainWorkspacePanel.Location = new System.Drawing.Point(0, 0);
             this.mainWorkspacePanel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.mainWorkspacePanel.Name = "mainWorkspacePanel";
-            this.mainWorkspacePanel.Size = new System.Drawing.Size(1104, 643);
+            this.mainWorkspacePanel.Size = new System.Drawing.Size(1104, 554);
             this.mainWorkspacePanel.TabIndex = 0;
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1371, 643);
+            this.ClientSize = new System.Drawing.Size(1371, 554);
             this.Controls.Add(this.panelContent);
             this.Controls.Add(this.panelSideMenu);
-            this.Margin = new System.Windows.Forms.Padding(5);
+            this.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.Name = "Main";
             this.Text = "Main";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
