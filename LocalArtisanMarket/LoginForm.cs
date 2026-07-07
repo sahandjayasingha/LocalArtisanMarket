@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
 namespace LocalArtisanMarket
@@ -9,7 +10,6 @@ namespace LocalArtisanMarket
     public partial class LoginForm : Form
     {
         private Main _mainForm;
-
         private string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=LocalArtisanMarketDB;Integrated Security=True;Connect Timeout=30;";
 
         public static string CurrentUserID { get; private set; } = null;
@@ -20,10 +20,16 @@ namespace LocalArtisanMarket
         private LinkLabel lnkSwitchToRegister;
         private LinkLabel lnkSwitchToLogin;
         private Label lblRoleTitle;
+        private Panel pnlBackground;
+        private Panel pnlCenterContainer;
+        private Label lblAppTitle;
+        private Label lblAppSubtitle;
 
         public LoginForm()
         {
             InitializeComponent();
+            ClearOldDesignerControls();
+            ApplyPremiumStyle();
             SetupRegisterControls();
         }
 
@@ -31,35 +37,195 @@ namespace LocalArtisanMarket
         {
             InitializeComponent();
             _mainForm = mainForm;
+            ClearOldDesignerControls();
+            ApplyPremiumStyle();
             SetupRegisterControls();
+        }
+
+        private void ClearOldDesignerControls()
+        {
+            for (int i = this.Controls.Count - 1; i >= 0; i--)
+            {
+                Control c = this.Controls[i];
+                if (c != txtLoginEmail && c != txtLoginPassword && c != btnLoginSubmit)
+                {
+                    this.Controls.RemoveAt(i);
+                }
+            }
+        }
+
+        private void ApplyPremiumStyle()
+        {
+            this.Size = new Size(800, 600);
+            this.Text = "Welcome Back";
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.BackColor = Color.FromArgb(248, 246, 242);
+
+            pnlBackground = new Panel();
+            pnlBackground.Dock = DockStyle.Fill;
+            pnlBackground.BackColor = Color.FromArgb(248, 246, 242);
+            this.Controls.Add(pnlBackground);
+
+            pnlCenterContainer = new Panel();
+            pnlCenterContainer.Size = new Size(440, 520);
+            pnlCenterContainer.BackColor = Color.FromArgb(252, 250, 245);
+            pnlCenterContainer.BorderStyle = BorderStyle.None;
+            pnlCenterContainer.Paint += PnlCenterContainer_Paint;
+            pnlBackground.Controls.Add(pnlCenterContainer);
+
+            pnlBackground.SizeChanged += (s, e) => CenterLoginCard();
+            this.Load += (s, e) => CenterLoginCard();
+
+            lblAppTitle = new Label();
+            lblAppTitle.Text = "Local Artisan Platform";
+            lblAppTitle.Font = new Font("Segoe UI", 20, FontStyle.Bold);
+            lblAppTitle.ForeColor = Color.FromArgb(48, 36, 26);
+            lblAppTitle.Location = new Point(10, 45);
+            lblAppTitle.Size = new Size(420, 40);
+            lblAppTitle.TextAlign = ContentAlignment.MiddleCenter;
+
+            lblAppSubtitle = new Label();
+            lblAppSubtitle.Text = "Connect with heritage and traditional craft masters";
+            lblAppSubtitle.Font = new Font("Segoe UI", 9, FontStyle.Regular);
+            lblAppSubtitle.ForeColor = Color.FromArgb(140, 120, 105);
+            lblAppSubtitle.Location = new Point(10, 85);
+            lblAppSubtitle.Size = new Size(420, 25);
+            lblAppSubtitle.TextAlign = ContentAlignment.MiddleCenter;
+
+            pnlCenterContainer.Controls.Add(lblAppTitle);
+            pnlCenterContainer.Controls.Add(lblAppSubtitle);
+
+            int startX = (pnlCenterContainer.Width - 340) / 2;
+
+            StyleTextBox(txtLoginEmail, "Email Address", 150, startX);
+            StyleTextBox(txtLoginPassword, "Password", 235, startX);
+            txtLoginPassword.PasswordChar = '●';
+
+            StyleButton(btnLoginSubmit, "Sign In", 330, Color.FromArgb(120, 80, 45), startX);
+        }
+
+        private void CenterLoginCard()
+        {
+            if (pnlBackground != null && pnlCenterContainer != null)
+            {
+                pnlCenterContainer.Location = new Point(
+                    (pnlBackground.Width - pnlCenterContainer.Width) / 2,
+                    (pnlBackground.Height - pnlCenterContainer.Height) / 2
+                );
+            }
+        }
+
+        private void StyleTextBox(TextBox txt, string watermark, int yPos, int startX)
+        {
+            if (txt.Parent != null) txt.Parent.Controls.Remove(txt);
+            pnlCenterContainer.Controls.Add(txt);
+            txt.Location = new Point(startX, yPos + 22);
+            txt.Width = 340;
+            txt.Height = 36;
+            txt.Font = new Font("Segoe UI", 11F);
+            txt.ForeColor = Color.FromArgb(60, 50, 40);
+            txt.BorderStyle = BorderStyle.FixedSingle;
+            txt.BackColor = Color.White;
+
+            Label lbl = new Label();
+            lbl.Text = watermark;
+            lbl.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lbl.ForeColor = Color.FromArgb(100, 85, 75);
+            lbl.Location = new Point(startX, yPos);
+            lbl.AutoSize = true;
+            pnlCenterContainer.Controls.Add(lbl);
+        }
+
+        private void StyleButton(Button btn, string text, int yPos, Color backColor, int startX)
+        {
+            if (btn.Parent != null) btn.Parent.Controls.Remove(btn);
+            pnlCenterContainer.Controls.Add(btn);
+            btn.Text = text;
+            btn.Location = new Point(startX, yPos);
+            btn.Width = 340;
+            btn.Height = 42;
+            btn.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            btn.ForeColor = Color.White;
+            btn.BackColor = backColor;
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.BorderSize = 0;
+            btn.Cursor = Cursors.Hand;
+        }
+
+        private void PnlCenterContainer_Paint(object sender, PaintEventArgs e)
+        {
+            using (Pen borderPen = new Pen(Color.FromArgb(220, 210, 195), 2))
+            {
+                e.Graphics.DrawRectangle(borderPen, 0, 0, pnlCenterContainer.Width - 1, pnlCenterContainer.Height - 1);
+            }
         }
 
         private void SetupRegisterControls()
         {
+            int startX = (pnlCenterContainer.Width - 340) / 2;
+
             lnkSwitchToRegister = new LinkLabel();
             lnkSwitchToRegister.Text = "Don't have an account? Register Here";
-            lnkSwitchToRegister.Location = new Point(txtLoginPassword.Location.X, btnLoginSubmit.Location.Y + btnLoginSubmit.Height + 15);
-            lnkSwitchToRegister.AutoSize = true;
+            lnkSwitchToRegister.Font = new Font("Segoe UI", 9.5F, FontStyle.Regular);
+            lnkSwitchToRegister.LinkColor = Color.FromArgb(140, 70, 20);
+            lnkSwitchToRegister.ActiveLinkColor = Color.FromArgb(100, 40, 10);
+            lnkSwitchToRegister.Location = new Point(startX, 395);
+            lnkSwitchToRegister.Width = 340;
+            lnkSwitchToRegister.TextAlign = ContentAlignment.MiddleCenter;
             lnkSwitchToRegister.Click += (s, e) => SwitchUI(true);
-            this.Controls.Add(lnkSwitchToRegister);
+            pnlCenterContainer.Controls.Add(lnkSwitchToRegister);
 
-            lblRoleTitle = new Label { Text = "Select Role", Location = new Point(txtLoginPassword.Location.X, txtLoginPassword.Location.Y + txtLoginPassword.Height + 15), AutoSize = true, Visible = false };
-            cmbRegRole = new ComboBox { Location = new Point(txtLoginPassword.Location.X, lblRoleTitle.Location.Y + 20), Width = txtLoginPassword.Width, DropDownStyle = ComboBoxStyle.DropDownList, Visible = false };
+            lblRoleTitle = new Label
+            {
+                Text = "Select Account Role",
+                Location = new Point(startX, 330),
+                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(100, 85, 75),
+                AutoSize = true,
+                Visible = false
+            };
+
+            cmbRegRole = new ComboBox
+            {
+                Location = new Point(startX, 352),
+                Width = 340,
+                Height = 36,
+                Font = new Font("Segoe UI", 11F),
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                Visible = false,
+                BackColor = Color.White,
+                ForeColor = Color.FromArgb(60, 50, 40)
+            };
             cmbRegRole.Items.AddRange(new string[] { "Customer", "Artisan" });
-            this.Controls.Add(lblRoleTitle);
-            this.Controls.Add(cmbRegRole);
 
-            btnRegSubmit = new Button { Text = "Register Account", Location = new Point(txtLoginPassword.Location.X, cmbRegRole.Location.Y + cmbRegRole.Height + 15), Width = txtLoginPassword.Width, Height = btnLoginSubmit.Height, BackColor = Color.LightBlue, Visible = false };
+            pnlCenterContainer.Controls.Add(lblRoleTitle);
+            pnlCenterContainer.Controls.Add(cmbRegRole);
+
+            btnRegSubmit = new Button();
+            StyleButton(btnRegSubmit, "Create Premium Account", 405, Color.FromArgb(65, 110, 75), startX);
+            btnRegSubmit.Visible = false;
             btnRegSubmit.Click += DynamicRegisterSubmit_Click;
-            this.Controls.Add(btnRegSubmit);
 
-            lnkSwitchToLogin = new LinkLabel { Text = "Back to Login", Location = new Point(txtLoginPassword.Location.X, btnRegSubmit.Location.Y + btnRegSubmit.Height + 15), AutoSize = true, Visible = false };
+            lnkSwitchToLogin = new LinkLabel
+            {
+                Text = "Back to Login Credentials",
+                Font = new Font("Segoe UI", 9.5F, FontStyle.Regular),
+                LinkColor = Color.FromArgb(100, 100, 100),
+                ActiveLinkColor = Color.Black,
+                Location = new Point(startX, 460),
+                Width = 340,
+                TextAlign = ContentAlignment.MiddleCenter,
+                Visible = false
+            };
             lnkSwitchToLogin.Click += (s, e) => SwitchUI(false);
-            this.Controls.Add(lnkSwitchToLogin);
+            pnlCenterContainer.Controls.Add(lnkSwitchToLogin);
         }
 
         private void SwitchUI(bool showRegister)
         {
+            int startX = (pnlCenterContainer.Width - 340) / 2;
+
             btnLoginSubmit.Visible = !showRegister;
             lnkSwitchToRegister.Visible = !showRegister;
 
@@ -67,6 +233,17 @@ namespace LocalArtisanMarket
             cmbRegRole.Visible = showRegister;
             btnRegSubmit.Visible = showRegister;
             lnkSwitchToLogin.Visible = showRegister;
+
+            if (showRegister)
+            {
+                this.Text = "Create Marketplace Profile";
+                lnkSwitchToRegister.Location = new Point(startX, 395);
+            }
+            else
+            {
+                this.Text = "Welcome Back";
+                lnkSwitchToRegister.Location = new Point(startX, 395);
+            }
         }
 
         private void btnLoginSubmit_Click(object sender, EventArgs e)

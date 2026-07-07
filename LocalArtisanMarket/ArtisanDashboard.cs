@@ -27,6 +27,8 @@ namespace LocalArtisanMarket
             InitializeComponent();
             _bll = new ProductBusinessLogic();
 
+            ApplyPremiumStyle();
+
             this.Load += new System.EventHandler(this.ArtisanDashboard_Load);
 
             if (btnCreate != null) btnCreate.Click += new System.EventHandler(this.btnCreate_Click);
@@ -34,6 +36,65 @@ namespace LocalArtisanMarket
             if (btnDelete != null) btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             if (btnClear != null) btnClear.Click += new System.EventHandler(this.btnClear_Click);
             if (dgvProducts != null) dgvProducts.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProducts_CellClick);
+        }
+
+        private void ApplyPremiumStyle()
+        {
+            this.BackColor = Color.FromArgb(248, 246, 242);
+
+            foreach (Control c in this.Controls)
+            {
+                if (c is TextBox txt)
+                {
+                    txt.Font = new Font("Segoe UI", 10.5F);
+                    txt.BorderStyle = BorderStyle.FixedSingle;
+                    txt.BackColor = Color.White;
+                }
+                else if (c is Label lbl)
+                {
+                    lbl.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+                    lbl.ForeColor = Color.FromArgb(48, 36, 26);
+                }
+            }
+
+            StyleActionButton(btnCreate, "Create", Color.FromArgb(65, 110, 75));
+            StyleActionButton(btnUpdate, "Update", Color.FromArgb(145, 95, 50));
+            StyleActionButton(btnDelete, "Delete", Color.FromArgb(180, 70, 70));
+            StyleActionButton(btnClear, "Clear", Color.FromArgb(120, 110, 100));
+
+            if (dgvProducts != null)
+            {
+                dgvProducts.BackgroundColor = Color.White;
+                dgvProducts.BorderStyle = BorderStyle.None;
+                dgvProducts.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+                dgvProducts.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
+                dgvProducts.EnableHeadersVisualStyles = false;
+                dgvProducts.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(44, 34, 24);
+                dgvProducts.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+                dgvProducts.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
+                dgvProducts.ColumnHeadersHeight = 45;
+                dgvProducts.DefaultCellStyle.SelectionBackColor = Color.FromArgb(240, 238, 235);
+                dgvProducts.DefaultCellStyle.SelectionForeColor = Color.Black;
+                dgvProducts.DefaultCellStyle.Font = new Font("Segoe UI", 10F);
+                dgvProducts.RowTemplate.Height = 40;
+                dgvProducts.AllowUserToAddRows = false;
+                dgvProducts.AllowUserToDeleteRows = false;
+                dgvProducts.ReadOnly = true;
+                dgvProducts.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            }
+        }
+
+        private void StyleActionButton(Button btn, string text, Color bgColor)
+        {
+            if (btn == null) return;
+            btn.Text = text;
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.BorderSize = 0;
+            btn.BackColor = bgColor;
+            btn.ForeColor = Color.White;
+            btn.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btn.Cursor = Cursors.Hand;
+            btn.Height = 38;
         }
 
         private void ArtisanDashboard_Load(object sender, EventArgs e)
@@ -51,52 +112,63 @@ namespace LocalArtisanMarket
             else if (this.Controls.ContainsKey("txtCraft")) referenceControl = this.Controls["txtCraft"];
 
             int startX = referenceControl != null ? referenceControl.Location.X : 214;
-            int startY = referenceControl != null ? referenceControl.Location.Y + 35 : 220;
+            int startY = referenceControl != null ? referenceControl.Location.Y + 40 : 220;
             int controlWidth = referenceControl != null ? referenceControl.Width : 200;
-            Font controlFont = referenceControl != null ? referenceControl.Font : this.Font;
+
+            Font labelFont = new Font("Segoe UI", 10F, FontStyle.Bold);
+            Font textFont = new Font("Segoe UI", 10.5F);
 
             lblImageLabel = new Label();
             lblImageLabel.Text = "Product Image:";
-            lblImageLabel.Location = new Point(startX - 110, startY + 3);
+            lblImageLabel.Location = new Point(startX - 120, startY + 3);
             lblImageLabel.AutoSize = true;
-            lblImageLabel.Font = controlFont;
+            lblImageLabel.Font = labelFont;
+            lblImageLabel.ForeColor = Color.FromArgb(48, 36, 26);
 
             txtImagePath = new TextBox();
             txtImagePath.Location = new Point(startX, startY);
-            txtImagePath.Size = new Size(controlWidth - 95, 20);
+            txtImagePath.Size = new Size(controlWidth - 95, 25);
             txtImagePath.ReadOnly = true;
+            txtImagePath.Font = textFont;
+            txtImagePath.BorderStyle = BorderStyle.FixedSingle;
 
             btnBrowseImage = new Button();
-            btnBrowseImage.Text = "Browse";
-            btnBrowseImage.Location = new Point(txtImagePath.Location.X + txtImagePath.Width + 5, txtImagePath.Location.Y - 2);
-            btnBrowseImage.Size = new Size(90, 24);
+            StyleActionButton(btnBrowseImage, "Browse", Color.FromArgb(120, 110, 100));
+            btnBrowseImage.Location = new Point(txtImagePath.Location.X + txtImagePath.Width + 5, txtImagePath.Location.Y - 1);
+            btnBrowseImage.Size = new Size(90, 27);
             btnBrowseImage.Click += new System.EventHandler(this.btnBrowseImage_Click);
 
             lblStoryTextLabel = new Label();
             lblStoryTextLabel.Text = "Craft Story Text:";
-            lblStoryTextLabel.Location = new Point(startX - 110, startY + 35);
+            lblStoryTextLabel.Location = new Point(startX - 120, startY + 40);
             lblStoryTextLabel.AutoSize = true;
-            lblStoryTextLabel.Font = controlFont;
+            lblStoryTextLabel.Font = labelFont;
+            lblStoryTextLabel.ForeColor = Color.FromArgb(48, 36, 26);
 
             txtStoryText = new TextBox();
-            txtStoryText.Location = new Point(startX, startY + 32);
-            txtStoryText.Size = new Size(controlWidth, 20);
+            txtStoryText.Location = new Point(startX, startY + 37);
+            txtStoryText.Size = new Size(controlWidth, 25);
+            txtStoryText.Font = textFont;
+            txtStoryText.BorderStyle = BorderStyle.FixedSingle;
 
             lblStoryImageLabel = new Label();
             lblStoryImageLabel.Text = "Story Image:";
-            lblStoryImageLabel.Location = new Point(startX - 110, startY + 65);
+            lblStoryImageLabel.Location = new Point(startX - 120, startY + 75);
             lblStoryImageLabel.AutoSize = true;
-            lblStoryImageLabel.Font = controlFont;
+            lblStoryImageLabel.Font = labelFont;
+            lblStoryImageLabel.ForeColor = Color.FromArgb(48, 36, 26);
 
             txtStoryImagePath = new TextBox();
-            txtStoryImagePath.Location = new Point(startX, startY + 62);
-            txtStoryImagePath.Size = new Size(controlWidth - 95, 20);
+            txtStoryImagePath.Location = new Point(startX, startY + 72);
+            txtStoryImagePath.Size = new Size(controlWidth - 95, 25);
             txtStoryImagePath.ReadOnly = true;
+            txtStoryImagePath.Font = textFont;
+            txtStoryImagePath.BorderStyle = BorderStyle.FixedSingle;
 
             btnBrowseStoryImage = new Button();
-            btnBrowseStoryImage.Text = "Browse";
-            btnBrowseStoryImage.Location = new Point(txtStoryImagePath.Location.X + txtStoryImagePath.Width + 5, txtStoryImagePath.Location.Y - 2);
-            btnBrowseStoryImage.Size = new Size(90, 24);
+            StyleActionButton(btnBrowseStoryImage, "Browse", Color.FromArgb(120, 110, 100));
+            btnBrowseStoryImage.Location = new Point(txtStoryImagePath.Location.X + txtStoryImagePath.Width + 5, txtStoryImagePath.Location.Y - 1);
+            btnBrowseStoryImage.Size = new Size(90, 27);
             btnBrowseStoryImage.Click += new System.EventHandler(this.btnBrowseStoryImage_Click);
 
             this.Controls.Add(lblImageLabel);
@@ -108,11 +180,11 @@ namespace LocalArtisanMarket
             this.Controls.Add(txtStoryImagePath);
             this.Controls.Add(btnBrowseStoryImage);
 
-            if (btnCreate != null) btnCreate.Location = new Point(btnCreate.Location.X, txtStoryImagePath.Location.Y + 40);
-            if (btnUpdate != null) btnUpdate.Location = new Point(btnUpdate.Location.X, txtStoryImagePath.Location.Y + 40);
-            if (btnDelete != null) btnDelete.Location = new Point(btnDelete.Location.X, txtStoryImagePath.Location.Y + 40);
-            if (btnClear != null) btnClear.Location = new Point(btnClear.Location.X, txtStoryImagePath.Location.Y + 40);
-            if (dgvProducts != null) dgvProducts.Location = new Point(dgvProducts.Location.X, btnCreate.Location.Y + 45);
+            if (btnCreate != null) btnCreate.Location = new Point(btnCreate.Location.X, txtStoryImagePath.Location.Y + 45);
+            if (btnUpdate != null) btnUpdate.Location = new Point(btnUpdate.Location.X, txtStoryImagePath.Location.Y + 45);
+            if (btnDelete != null) btnDelete.Location = new Point(btnDelete.Location.X, txtStoryImagePath.Location.Y + 45);
+            if (btnClear != null) btnClear.Location = new Point(btnClear.Location.X, txtStoryImagePath.Location.Y + 45);
+            if (dgvProducts != null) dgvProducts.Location = new Point(dgvProducts.Location.X, btnCreate != null ? btnCreate.Location.Y + 55 : startY + 120);
         }
 
         private void RefreshGrid()
@@ -260,15 +332,13 @@ namespace LocalArtisanMarket
                 try
                 {
                     selectedProductId = Convert.ToInt32(selectedRow.Cells["ProductID"].Value);
-                    txtProductName.Text = selectedRow.Cells["ProductName"].Value?.ToString();
-                    txtPrice.Text = selectedRow.Cells["Price"].Value?.ToString();
-                    txtDescription.Text = selectedRow.Cells["Description"].Value?.ToString();
-                    txtStock.Text = selectedRow.Cells["Stock"].Value?.ToString();
 
-                    if (selectedRow.Cells["OriginHub"] != null) txtOriginHub.Text = selectedRow.Cells["OriginHub"].Value?.ToString();
-
-                    if (dgvProducts.Columns.Contains("CraftTechnique"))
-                        txtCraftTechnique.Text = selectedRow.Cells["CraftTechnique"].Value?.ToString();
+                    if (this.Controls.ContainsKey("txtProductName")) this.Controls["txtProductName"].Text = selectedRow.Cells["ProductName"].Value?.ToString();
+                    if (this.Controls.ContainsKey("txtPrice")) this.Controls["txtPrice"].Text = selectedRow.Cells["Price"].Value?.ToString();
+                    if (this.Controls.ContainsKey("txtDescription")) this.Controls["txtDescription"].Text = selectedRow.Cells["Description"].Value?.ToString();
+                    if (this.Controls.ContainsKey("txtStock")) this.Controls["txtStock"].Text = selectedRow.Cells["Stock"].Value?.ToString();
+                    if (this.Controls.ContainsKey("txtOriginHub") && selectedRow.Cells["OriginHub"] != null) this.Controls["txtOriginHub"].Text = selectedRow.Cells["OriginHub"].Value?.ToString();
+                    if (this.Controls.ContainsKey("txtCraftTechnique") && dgvProducts.Columns.Contains("CraftTechnique")) this.Controls["txtCraftTechnique"].Text = selectedRow.Cells["CraftTechnique"].Value?.ToString();
 
                     txtImagePath.Text = dgvProducts.Columns.Contains("ImagePath") && selectedRow.Cells["ImagePath"].Value != null ? selectedRow.Cells["ImagePath"].Value.ToString() : "";
                     txtStoryText.Text = dgvProducts.Columns.Contains("StoryText") && selectedRow.Cells["StoryText"].Value != null ? selectedRow.Cells["StoryText"].Value.ToString() : "";
@@ -286,17 +356,24 @@ namespace LocalArtisanMarket
             decimal priceValue = 0;
             int stockValue = 0;
 
-            decimal.TryParse(txtPrice.Text.Trim(), out priceValue);
-            int.TryParse(txtStock.Text.Trim(), out stockValue);
+            string productName = this.Controls.ContainsKey("txtProductName") ? this.Controls["txtProductName"].Text.Trim() : "";
+            string priceStr = this.Controls.ContainsKey("txtPrice") ? this.Controls["txtPrice"].Text.Trim() : "";
+            string descStr = this.Controls.ContainsKey("txtDescription") ? this.Controls["txtDescription"].Text.Trim() : "";
+            string stockStr = this.Controls.ContainsKey("txtStock") ? this.Controls["txtStock"].Text.Trim() : "";
+            string originHub = this.Controls.ContainsKey("txtOriginHub") ? this.Controls["txtOriginHub"].Text.Trim() : "";
+            string craftTech = this.Controls.ContainsKey("txtCraftTechnique") ? this.Controls["txtCraftTechnique"].Text.Trim() : "";
+
+            decimal.TryParse(priceStr, out priceValue);
+            int.TryParse(stockStr, out stockValue);
 
             return new ProductDTO(
                 selectedProductId,
-                txtProductName.Text.Trim(),
+                productName,
                 priceValue,
-                txtDescription.Text.Trim(),
+                descStr,
                 stockValue,
-                txtOriginHub.Text.Trim(),
-                (txtCraftTechnique != null ? txtCraftTechnique.Text.Trim() : ""),
+                originHub,
+                craftTech,
                 0.0m,
                 "Raw",
                 (txtImagePath != null ? txtImagePath.Text.Trim() : ""),
@@ -310,12 +387,14 @@ namespace LocalArtisanMarket
         private void ClearInputs()
         {
             selectedProductId = -1;
-            txtProductName.Clear();
-            txtPrice.Clear();
-            txtDescription.Clear();
-            txtStock.Clear();
-            txtOriginHub.Clear();
-            if (txtCraftTechnique != null) txtCraftTechnique.Clear();
+
+            if (this.Controls.ContainsKey("txtProductName")) this.Controls["txtProductName"].Text = "";
+            if (this.Controls.ContainsKey("txtPrice")) this.Controls["txtPrice"].Text = "";
+            if (this.Controls.ContainsKey("txtDescription")) this.Controls["txtDescription"].Text = "";
+            if (this.Controls.ContainsKey("txtStock")) this.Controls["txtStock"].Text = "";
+            if (this.Controls.ContainsKey("txtOriginHub")) this.Controls["txtOriginHub"].Text = "";
+            if (this.Controls.ContainsKey("txtCraftTechnique")) this.Controls["txtCraftTechnique"].Text = "";
+
             if (txtImagePath != null) txtImagePath.Clear();
             if (txtStoryText != null) txtStoryText.Clear();
             if (txtStoryImagePath != null) txtStoryImagePath.Clear();
